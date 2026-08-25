@@ -1,0 +1,4 @@
+{
+  "build": "npx hexo generate",
+  "output": "public"
+}

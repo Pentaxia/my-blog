@@ -1,0 +1,93 @@
+// 温暖的绿色系配色 - 像夏日树荫下的青绿，不刺眼，有温度
+
+green-primary = #4a7c59
+green-light = #6b9b6a
+green-lighter = #8db580
+green-bg = #f0f4ed
+green-bg-alt = #e6ecde
+green-text-dark = #2d4a32
+green-border = #c5d4be
+
+body
+  background-color: green-bg
+  color: #3a3a3a
+
+a
+  color: green-primary
+  border-bottom-color: green-lighter
+  &:hover
+    color: green-light
+    border-bottom-color: green-light
+
+.site-title
+  color: green-text-dark !important
+  font-weight: 600
+
+.site-subtitle
+  color: green-light !important
+
+.menu
+  .menu-item a
+    color: green-text-dark
+    &:hover
+      color: green-primary
+  .menu-item-active a
+    color: green-primary
+
+.sidebar
+  background: green-bg-alt
+
+.sidebar-inner
+  background: rgba(255, 255, 255, 0.85)
+
+.post-block
+  background: white
+  border: 1px solid green-border
+  border-radius: 8px
+  box-shadow: 0 2px 8px rgba(74, 124, 89, 0.06)
+
+.post-title
+  color: green-text-dark
+
+.post-meta
+  color: green-light
+
+.post-body
+  h2
+    border-bottom-color: green-border
+    color: green-text-dark
+  h3
+    color: green-text-dark
+  blockquote
+    border-left-color: green-light
+    background: green-bg
+    color: #555
+  code
+    background: green-bg-alt
+  table
+    th
+      background: green-bg-alt
+      border-color: green-border
+    td
+      border-color: green-border
+
+.pagination
+  .page-number, .prev, .next
+    color: green-text-dark
+    &:hover
+      background: green-bg-alt
+  .current
+    background: green-primary
+    color: white
+    border-color: green-primary
+
+.post-eof
+  background: green-border
+
+.footer
+  color: green-light
+
+.tag-cloud a
+  color: green-light
+  &:hover
+    color: green-primary
