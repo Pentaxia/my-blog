@@ -1,0 +1,24 @@
+{% if page.layout === 'post' or page.layout === 'page' %}
+  {% if page.comments !== false %}
+    <div id="waline" style="max-width: 800px; margin: 2rem auto;"></div>
+    <script type="module">
+      import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js';
+      import * as Markdown from 'https://unpkg.com/@waline/client@v3/dist/markdown.js';
+
+      init({
+        el: '#waline',
+        serverURL: 'https://waline-pentaxia.vercel.app',
+        lang: 'zh-CN',
+        dark: 'auto',
+        meta: ['nick', 'mail', 'link'],
+        requiredMeta: ['nick'],
+        search: true,
+        reaction: true,
+        markdown: Markdown,
+        pageview: true,
+        comment: true,
+      });
+    </script>
+    <link rel="stylesheet" href="https://unpkg.com/@waline/client@v3/dist/waline.css" />
+  {% endif %}
+{% endif %}

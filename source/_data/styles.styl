@@ -91,3 +91,193 @@ a
   color: green-light
   &:hover
     color: green-primary
+
+// ========== 首页板块样式 ==========
+
+home-gap = 28px
+home-radius = 12px
+
+// 生活文章板块（绿色系）
+.home-sections
+  max-width: 800px
+  margin: 0 auto
+  padding: 10px 0
+
+.home-section
+  margin-bottom: home-gap
+  border-radius: home-radius
+  overflow: hidden
+
+  // 生活文章（绿色）
+  &:nth-child(1)
+    background: #f0f4ed
+    border: 1px solid #c5d4be
+    box-shadow: 0 2px 10px rgba(74, 124, 89, 0.08)
+
+  // 创赛日志（暖黄色）
+  &:nth-child(2)
+    background: #fefbf0
+    border: 1px solid #e8dcab
+    box-shadow: 0 2px 10px rgba(184, 149, 48, 0.08)
+
+.home-section-header
+  padding: 18px 24px 8px
+
+  .home-section-title
+    font-size: 1.4em
+    font-weight: 600
+    margin: 0
+    display: flex
+    align-items: center
+
+    // 生活板块标题
+    .home-section:nth-child(1) &
+      color: #4a7c59
+
+    // 创赛板块标题
+    .home-section:nth-child(2) &
+      color: #b89530
+
+    .home-section-icon
+      margin-right: 8px
+      font-size: 1.1em
+
+  .home-section-desc
+    font-size: 0.85em
+    margin: 4px 0 0
+    opacity: 0.7
+
+    .home-section:nth-child(1) &
+      color: #7a9b7e
+
+    .home-section:nth-child(2) &
+      color: #b0a070
+
+.home-post-list
+  padding: 4px 24px
+
+.home-post-card
+  padding: 12px 0
+  border-bottom: 1px dashed transparent
+  transition: background 0.2s ease
+  border-radius: 6px
+
+  // 生活板块文章
+  .home-section:nth-child(1) &
+    border-bottom-color: #d5e0cc
+
+    &:hover
+      background: #e6ecde
+
+  // 创赛板块文章
+  .home-section:nth-child(2) &
+    border-bottom-color: #f0e4c0
+
+    &:hover
+      background: #fbf3dc
+
+  &:last-child
+    border-bottom: none
+
+.home-post-link
+  display: flex
+  align-items: center
+  text-decoration: none
+  border-bottom: none !important
+  padding: 0 8px
+
+  .home-post-date
+    font-size: 0.85em
+    margin-right: 16px
+    white-space: nowrap
+
+    .home-section:nth-child(1) &
+      color: #7a9b7e
+
+    .home-section:nth-child(2) &
+      color: #b0a070
+
+  .home-post-title
+    flex: 1
+    font-size: 0.95em
+    overflow: hidden
+    text-overflow: ellipsis
+    white-space: nowrap
+
+    .home-section:nth-child(1) &
+      color: #2d4a32
+
+    .home-section:nth-child(2) &
+      color: #4a3d10
+
+    &:hover
+      text-decoration: none
+
+  .home-post-tag
+    font-size: 0.7em
+    padding: 2px 8px
+    border-radius: 10px
+    margin-left: 8px
+    white-space: nowrap
+
+    .home-section:nth-child(1) &
+      background: #e8f0e3
+      color: #3d6b4e
+
+    .home-section:nth-child(2) &
+      background: #fcf0d4
+      color: #9c7d20
+
+.home-empty
+  text-align: center
+  padding: 20px 0
+  color: #aaa
+  font-size: 0.9em
+
+.home-more-btn
+  display: inline-block
+  margin: 12px 24px 20px
+  padding: 6px 20px
+  border-radius: 20px
+  font-size: 0.85em
+  text-decoration: none
+  border-bottom: none !important
+  transition: all 0.25s ease
+
+  .home-section:nth-child(1) &
+    background: #4a7c59
+    color: white
+
+    &:hover
+      background: #3d6b4e
+      transform: scale(1.03)
+
+  .home-section:nth-child(2) &
+    background: #b89530
+    color: white
+
+    &:hover
+      background: #9c7d20
+      transform: scale(1.03)
+
+// 手机端适配
+@media (max-width: 767px)
+  .home-sections
+    padding: 0 4px
+
+  .home-section-header
+    padding: 14px 16px 6px
+
+  .home-post-list
+    padding: 4px 16px
+
+  .home-post-link
+    flex-wrap: wrap
+
+    .home-post-title
+      white-space: normal
+      width: 100%
+      margin-top: 2px
+
+  .home-more-btn
+    margin: 10px 16px 16px
