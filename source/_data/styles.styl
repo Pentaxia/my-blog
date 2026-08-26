@@ -282,24 +282,38 @@ home-radius = 12px
   .home-more-btn
     margin: 10px 16px 16px
 
-// ========== Giscus 评论系统样式 ==========
+// ========== Waline 评论系统样式 ==========
 
-.giscus-container
+.waline-title
   max-width: 800px
-  margin: 40px auto 20px
-  padding: 24px
-  background: white
-  border: 1px solid green-border
-  border-radius: 12px
-  box-shadow: 0 2px 8px rgba(74, 124, 89, 0.06)
-
-.giscus-title
+  margin: 40px auto 12px
   font-size: 1.2em
   font-weight: 600
   color: green-text-dark
-  margin-bottom: 16px
   padding-bottom: 8px
   border-bottom: 1px solid green-border
 
-.giscus-frame
-  width: 100% !important
+#waline-container
+  max-width: 800px
+  margin: 0 auto 40px
+  padding: 0 4px
+
+  .wl-btn
+    border-radius: 6px
+
+  .wl-btn.primary
+    background-color: green-primary
+    border-color: green-primary
+
+    &:hover
+      background-color: green-light
+      border-color: green-light
+
+  .wl-header-item label
+    color: green-text-dark
+
+  .wl-power
+    color: green-light
+
+  .wl-count
+    color: green-text-dark

@@ -1,21 +1,17 @@
-{# Giscus 评论系统 - 只在文章页面加载 #}
+{# Waline 评论系统 - 只在文章页面加载 #}
 {%- if page.comments !== false and is_post() %}
-<div class="giscus-container">
-  <div class="giscus-title">💬 评论</div>
-  <script src="https://giscus.app/client.js"
-    data-repo="Pentaxia/my-blog"
-    data-repo-id="R_kgDOUD4iZQ"
-    data-category="Announcements"
-    data-category-id="DIC_kwDOUD4iZc4DEN9l"
-    data-mapping="pathname"
-    data-strict="0"
-    data-reactions-enabled="1"
-    data-emit-metadata="0"
-    data-input-position="bottom"
-    data-theme="light"
-    data-lang="zh-CN"
-    crossorigin="anonymous"
-    async>
-  </script>
-</div>
+<div class="waline-title">💬 评论</div>
+<link rel="stylesheet" href="https://unpkg.com/@waline/client@v3/dist/waline.css" />
+<div id="waline-container"></div>
+<script type="module">
+  import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js';
+  init({
+    el: '#waline-container',
+    serverURL: 'https://waline-pentaxia.vercel.app',
+    lang: 'zh-CN',
+    emoji: ['//unpkg.com/@waline/emojis@1.1.0/weibo'],
+    search: true,
+    copyright: false,
+  });
+</script>
 {%- endif %}
