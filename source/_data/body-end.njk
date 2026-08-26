@@ -1,5 +1,5 @@
 {# Waline 评论系统 - 只在文章页面加载 #}
-{%- if page.comments !== false and is_post() %}
+{%- if page.comments !== false and page.layout === 'post' %}
 <div class="waline-title">💬 评论</div>
 <link rel="stylesheet" href="https://unpkg.com/@waline/client@v3/dist/waline.css" />
 <div id="waline-container"></div>
