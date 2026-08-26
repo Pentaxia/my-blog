@@ -1,15 +1,15 @@
 {# Waline 评论系统 - 只在文章页面加载 #}
 {%- if page.comments !== false and page.layout === 'post' %}
 <div class="waline-title">💬 评论</div>
-<link rel="stylesheet" href="https://unpkg.com/@waline/client@v3/dist/waline.css" />
+<link rel="stylesheet" href="/lib/waline/waline.css" />
 <div id="waline-container"></div>
 <script type="module">
-  import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js';
+  import { init } from '/lib/waline/waline.js';
   init({
     el: '#waline-container',
     serverURL: 'https://waline-pentaxia.vercel.app',
     lang: 'zh-CN',
-    emoji: ['//unpkg.com/@waline/emojis@1.1.0/weibo'],
+    emoji: ['/lib/waline/weibo'],
     search: true,
     copyright: false,
   });
