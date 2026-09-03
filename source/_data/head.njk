@@ -1,0 +1,23 @@
+<script>
+// 预加载当前造型的小人图片，让开场动画不必等图片
+// URL 规则需与 body-end.njk 保持一致
+(function () {
+  try {
+    var m = new Date().getMonth() + 1;
+    var suf = m >= 3 && m <= 5 ? '-spring' : m >= 6 && m <= 8 ? '' : m >= 9 && m <= 11 ? '-autumn' : '-winter';
+    var g = localStorage.getItem('dressup-girl');
+    var b = localStorage.getItem('dressup-boy');
+    var urls = [
+      g ? '/images/dressup-girl-' + g + '.png' : '/images/mascot-girl' + suf + '.png',
+      b ? '/images/dressup-boy-' + b + '.png' : '/images/mascot-boy' + suf + '.png'
+    ];
+    for (var i = 0; i < urls.length; i++) {
+      var l = document.createElement('link');
+      l.rel = 'preload';
+      l.as = 'image';
+      l.href = urls[i];
+      document.head.appendChild(l);
+    }
+  } catch (e) {}
+})();
+</script>

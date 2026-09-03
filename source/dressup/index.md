@@ -107,6 +107,10 @@ date: 2026-09-03 12:00:00
     return id ? '/images/dressup-' + role + '-' + id + '.png'
               : '/images/mascot-' + role + seasonSuffix + '.png';
   }
+  function thumbPath(role, id) {
+    return id ? '/images/dressup-' + role + '-' + id + '-thumb.png'
+              : '/images/mascot-' + role + seasonSuffix + '-thumb.png';
+  }
   function outfitName(role, id) {
     var list = OUTFITS[role];
     for (var i = 0; i < list.length; i++) if (list[i].id === id) return list[i].name;
@@ -134,8 +138,10 @@ date: 2026-09-03 12:00:00
       var card = document.createElement('div');
       card.className = 'dressup-card' + (o.id === current ? ' active' : '');
       var img = document.createElement('img');
-      img.src = imgPath(activeRole, o.id);
+      img.src = thumbPath(activeRole, o.id);
       img.alt = o.name;
+      img.loading = 'lazy';
+      img.decoding = 'async';
       var nm = document.createElement('div');
       nm.className = 'dressup-card-name';
       nm.textContent = o.name;

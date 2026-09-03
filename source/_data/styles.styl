@@ -1029,3 +1029,9 @@ body.intro-lock
 
     &.side-right.show
       right: 6px
+
+// ========== 开场动画等待小人图片加载完成，避免小人出现时还是空白 ==========
+.intro-hold
+  .intro-mascot, .intro-mascot *,
+  .intro-bubble, .heart-half, .draw-dot, .heart-svg
+    animation-play-state: paused !important

@@ -213,6 +213,47 @@
     } else {
       document.body.classList.add('intro-lock');
 
+      // 等小人图片加载完成再开始动画，避免小人出现时还是空白
+      var girlEl = document.getElementById('intro-girl-img');
+      var boyEl = document.getElementById('intro-boy-img');
+      var heartSvg = introStage.querySelector('.heart-svg');
+      introStage.classList.add('intro-hold');
+      if (heartSvg && heartSvg.pauseAnimations) heartSvg.pauseAnimations();
+
+      function imgReady(el) {
+        if (el.complete && el.naturalWidth) return Promise.resolve();
+        return new Promise(function (resolve) {
+          el.addEventListener('load', resolve, { once: true });
+          el.addEventListener('error', resolve, { once: true });
+        });
+      }
+
+      var timelineStarted = false;
+      function startTimeline() {
+        if (timelineStarted) return;
+        timelineStarted = true;
+        introStage.classList.remove('intro-hold');
+        if (heartSvg && heartSvg.unpauseAnimations) heartSvg.unpauseAnimations();
+        at(3300, function () { heartArea.classList.add('filled'); });
+        at(3620, function () { heartArea.classList.add('pop'); sparkleBurst(); });
+        at(4080, function () {
+          heartArea.classList.add('zoom');
+          heartScreen.classList.add('active');
+          for (var i = 0; i < 28; i++) {
+            (function (k) { at(k * 32, spawnMiniHeart); })(i);
+          }
+        });
+        at(5750, function () {
+          introStage.classList.add('fade-out');
+          heartScreen.classList.add('fade-out');
+          miniHearts.classList.add('fade-out');
+        });
+        at(6500, endIntro);
+      }
+
+      Promise.all([imgReady(girlEl), imgReady(boyEl)]).then(startTimeline);
+      setTimeout(startTimeline, 2500); // 弱网兜底，最多等 2.5 秒
+
       // 飘落花瓣
       var petalBox = document.getElementById('intro-petals');
       var pcolors = ['', 'yellow', 'white'];
@@ -254,22 +295,6 @@
         d.innerHTML = HEART_SVG.replace('{C}', PALETTE[Math.floor(Math.random() * PALETTE.length)]);
         miniHearts.appendChild(d);
       }
-
-      at(3300, function () { heartArea.classList.add('filled'); });
-      at(3620, function () { heartArea.classList.add('pop'); sparkleBurst(); });
-      at(4080, function () {
-        heartArea.classList.add('zoom');
-        heartScreen.classList.add('active');
-        for (var i = 0; i < 28; i++) {
-          (function (k) { at(k * 32, spawnMiniHeart); })(i);
-        }
-      });
-      at(5750, function () {
-        introStage.classList.add('fade-out');
-        heartScreen.classList.add('fade-out');
-        miniHearts.classList.add('fade-out');
-      });
-      at(6500, endIntro);
 
       skipBtn.addEventListener('click', endIntro);
     }
