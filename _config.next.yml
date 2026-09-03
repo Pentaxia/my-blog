@@ -104,6 +104,7 @@ menu:
   首页: / || fa fa-home
   生活: /categories/生活/ || fa fa-leaf
   创赛: /categories/创赛日志/ || fa fa-trophy
+  换装: /dressup/ || fa fa-magic
   博客: /blog/ || fa fa-book
   关于: /about/ || fa fa-user
   标签: /tags/ || fa fa-tags
