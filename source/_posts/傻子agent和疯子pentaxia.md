@@ -1,6 +1,6 @@
 ---
 title: 傻子agent和疯子pentaxia
-date: 2026-08-26
+date: 2026-08-26T20:00:00+08:00
 categories:
   - 生活
 tags:
