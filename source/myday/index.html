@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="private">
+<title>我的一天</title>
+<style>
+  :root{
+    --green:#4a7c59; --green-deep:#2d4a32; --green-light:#e6f0dd; --green-soft:#eef6e9;
+    --bg:#f4f8f0; --card:#ffffff; --border:#d8e5d0;
+    --orange:#d97f3f; --orange-light:#fdf0e3; --red:#d95c5c; --red-light:#fbe9e9;
+    --blue:#3d8c86; --text:#2d3a30; --muted:#7d9483;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  [hidden]{display:none!important}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    font-family:'PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Hiragino Sans GB',sans-serif;
+    background:var(--bg); color:var(--text); line-height:1.65; min-height:100vh;
+  }
+  button{font-family:inherit;cursor:pointer}
+  input{font-family:inherit}
+
+  /* ===== 密码门 ===== */
+  #gate{
+    position:fixed; inset:0; z-index:100; display:flex; align-items:center; justify-content:center;
+    background:linear-gradient(160deg,#eaf3e4 0%,#f4f8f0 55%,#e6f0dd 100%); padding:20px;
+  }
+  .gate-card{
+    background:var(--card); border:1px solid var(--border); border-radius:20px;
+    padding:36px 30px; width:100%; max-width:360px; text-align:center;
+    box-shadow:0 12px 36px rgba(74,124,89,.14);
+  }
+  .gate-emoji{font-size:44px; margin-bottom:8px}
+  .gate-card h1{font-size:1.3rem; color:var(--green-deep); margin-bottom:4px}
+  .gate-sub{font-size:.85rem; color:var(--muted); margin-bottom:22px}
+  #gate-pass{
+    width:100%; padding:11px 14px; border:1.5px solid var(--border); border-radius:12px;
+    font-size:1rem; outline:none; text-align:center; letter-spacing:2px; margin-bottom:12px;
+    transition:border-color .2s;
+  }
+  #gate-pass:focus{border-color:var(--green)}
+  #gate-btn{
+    width:100%; padding:11px; border:none; border-radius:12px; background:var(--green);
+    color:#fff; font-size:1rem; font-weight:600; transition:background .2s;
+  }
+  #gate-btn:hover{background:var(--green-deep)}
+  .gate-err{font-size:.82rem; color:var(--red); margin-top:10px; min-height:1.3em}
+
+  /* ===== 布局 ===== */
+  #app{max-width:640px; margin:0 auto; padding:16px 16px 40px}
+
+  .top{
+    background:linear-gradient(135deg,#4a7c59 0%,#5f9470 100%);
+    border-radius:18px; padding:20px 22px; color:#fff; margin-bottom:14px;
+    box-shadow:0 8px 24px rgba(74,124,89,.22);
+  }
+  .top-date{font-size:1.25rem; font-weight:700}
+  .top-week{margin-top:6px; display:flex; gap:8px; flex-wrap:wrap}
+  .chip{
+    display:inline-block; font-size:.78rem; background:rgba(255,255,255,.18);
+    border:1px solid rgba(255,255,255,.35); border-radius:999px; padding:2px 12px;
+  }
+
+  .card{
+    background:var(--card); border:1px solid var(--border); border-radius:16px;
+    padding:18px; margin-bottom:14px; box-shadow:0 3px 12px rgba(74,124,89,.05);
+  }
+  .card-head{font-weight:700; font-size:1rem; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap}
+  .card-head .side{font-size:.78rem; color:var(--muted); font-weight:500}
+
+  /* ===== 现在卡片 ===== */
+  .now-card{border-left:4px solid var(--green); position:relative}
+  .now-card.is-shui{border-left-color:var(--orange)}
+  .now-label{
+    display:inline-block; font-size:.72rem; font-weight:700; color:#fff;
+    background:var(--green); border-radius:999px; padding:1px 12px; margin-bottom:10px;
+  }
+  .is-shui .now-label{background:var(--orange)}
+  .now-title{font-size:1.2rem; font-weight:700; color:var(--green-deep)}
+  .now-desc{font-size:.9rem; color:var(--muted); margin-top:4px}
+  .now-shui{
+    margin-top:10px; font-size:.88rem; background:var(--orange-light); color:var(--orange);
+    border-radius:10px; padding:8px 12px;
+  }
+  .now-next{
+    margin-top:12px; padding-top:10px; border-top:1px dashed var(--border);
+    font-size:.85rem; color:var(--muted);
+  }
+  .now-next b{color:var(--green)}
+
+  /* ===== 打卡器 ===== */
+  .vocab-row{display:flex; align-items:center; justify-content:space-between; gap:12px}
+  .vocab-count{font-size:.9rem; color:var(--muted)}
+  .vocab-count b{font-size:2.1rem; color:var(--green); margin-right:2px}
+  #vocab-goal{
+    width:52px; padding:4px 6px; border:1px solid var(--border); border-radius:8px;
+    font-size:.9rem; text-align:center; color:var(--text); background:var(--bg);
+  }
+  #vocab-add{
+    border:none; background:var(--green); color:#fff; font-size:1rem; font-weight:700;
+    border-radius:999px; padding:12px 26px; transition:background .15s, transform .1s;
+    box-shadow:0 4px 12px rgba(74,124,89,.3);
+  }
+  #vocab-add:hover{background:var(--green-deep)}
+  #vocab-add:active{transform:scale(.95)}
+  .vocab-bar{height:10px; background:var(--green-light); border-radius:999px; margin-top:14px; overflow:hidden}
+  #vocab-fill{display:block; height:100%; width:0%; background:var(--green); border-radius:999px; transition:width .3s}
+  #vocab-fill.done{background:#7bb661}
+  .vocab-hint{font-size:.82rem; color:var(--muted); margin-top:8px}
+
+  /* ===== 备忘录 ===== */
+  .memo-add{display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap}
+  #memo-text{
+    flex:1; min-width:160px; padding:10px 12px; border:1.5px solid var(--border);
+    border-radius:10px; font-size:.92rem; outline:none;
+  }
+  #memo-text:focus{border-color:var(--green)}
+  #memo-due{
+    padding:10px 8px; border:1.5px solid var(--border); border-radius:10px;
+    font-size:.85rem; color:var(--muted); outline:none; background:var(--card);
+  }
+  #memo-btn{
+    padding:10px 16px; border:none; border-radius:10px; background:var(--green-soft);
+    color:var(--green-deep); font-size:.9rem; font-weight:600;
+  }
+  #memo-btn:hover{background:var(--green-light)}
+  #memo-list{list-style:none}
+  #memo-list li{
+    display:flex; align-items:flex-start; gap:10px; padding:10px 2px;
+    border-bottom:1px dashed var(--border); font-size:.92rem;
+  }
+  #memo-list li:last-child{border-bottom:none}
+  .memo-check{
+    width:19px; height:19px; flex:none; margin-top:3px; border:1.5px solid var(--green);
+    border-radius:6px; background:#fff; appearance:none; -webkit-appearance:none; cursor:pointer; position:relative;
+  }
+  .memo-check:checked{background:var(--green)}
+  .memo-check:checked::after{content:'✓'; position:absolute; inset:0; color:#fff; font-size:12px; text-align:center; line-height:17px}
+  .memo-body{flex:1; min-width:0; word-break:break-word}
+  .memo-done .memo-body{text-decoration:line-through; color:var(--muted)}
+  .memo-meta{margin-top:2px; font-size:.76rem; color:var(--muted)}
+  .badge{display:inline-block; border-radius:999px; padding:0 9px; font-size:.73rem; margin-right:6px}
+  .badge.today{background:var(--orange-light); color:var(--orange)}
+  .badge.over{background:var(--red-light); color:var(--red)}
+  .badge.future{background:var(--green-soft); color:var(--green)}
+  .memo-del{
+    border:none; background:none; color:#c4cfc6; font-size:1rem; padding:2px 6px;
+    border-radius:6px; flex:none; margin-top:2px;
+  }
+  .memo-del:hover{color:var(--red); background:var(--red-light)}
+  .memo-empty{font-size:.85rem; color:var(--muted); text-align:center; padding:6px 0}
+
+  /* ===== 时间轴 ===== */
+  #timeline{list-style:none}
+  #timeline li{
+    display:grid; grid-template-columns:76px 14px 1fr; gap:8px; align-items:start;
+    padding:9px 8px; border-radius:12px; margin-bottom:4px;
+  }
+  #timeline li.current{background:var(--green-soft); outline:1px solid #bcd8c0}
+  .tl-time{font-size:.75rem; color:var(--muted); text-align:right; padding-top:3px; white-space:nowrap}
+  .tl-dot{
+    width:11px; height:11px; border-radius:50%; margin-top:6px; justify-self:center;
+    background:var(--green); border:2px solid #fff; box-shadow:0 0 0 1.5px var(--green);
+  }
+  .tl-dot.shui{background:var(--orange); box-shadow:0 0 0 1.5px var(--orange)}
+  .tl-dot.sport{background:var(--blue); box-shadow:0 0 0 1.5px var(--blue)}
+  .tl-dot.free{background:#fff; box-shadow:0 0 0 1.5px #b9cabd}
+  .tl-name{font-size:.92rem; font-weight:600; color:var(--green-deep)}
+  li.current .tl-name::after{
+    content:'现在'; font-size:.68rem; font-weight:700; color:#fff; background:var(--green);
+    border-radius:999px; padding:1px 9px; margin-left:8px; vertical-align:1.5px;
+  }
+  .tl-meta{font-size:.78rem; color:var(--muted)}
+  .tl-tag{
+    display:inline-block; font-size:.7rem; border-radius:999px; padding:0 8px;
+    background:var(--orange-light); color:var(--orange); margin-left:6px; vertical-align:1px;
+  }
+  .tl-tag.online{background:var(--green-soft); color:var(--green)}
+
+  /* ===== 设置 ===== */
+  .btn-row{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px}
+  .ghost{
+    border:1px solid var(--border); background:var(--green-soft); color:var(--green-deep);
+    border-radius:999px; padding:8px 16px; font-size:.85rem; font-weight:500;
+  }
+  .ghost:hover{background:var(--green-light)}
+  .ghost.on{background:var(--green); color:#fff; border-color:var(--green)}
+  .tiny{font-size:.75rem; color:var(--muted); line-height:1.6}
+
+  footer{text-align:center; font-size:.78rem; color:var(--muted); margin-top:8px}
+
+  /* ===== 弹窗 ===== */
+  #modal{position:fixed; inset:0; z-index:90; background:rgba(45,58,48,.4); display:flex; align-items:center; justify-content:center; padding:20px}
+  .modal-card{
+    background:var(--card); border-radius:18px; padding:24px; width:100%; max-width:340px;
+    box-shadow:0 16px 40px rgba(0,0,0,.18);
+  }
+  .modal-card h3{font-size:1.05rem; color:var(--green-deep); margin-bottom:16px}
+  .modal-card input{
+    width:100%; padding:10px 12px; border:1.5px solid var(--border); border-radius:10px;
+    font-size:.95rem; outline:none; margin-bottom:10px;
+  }
+  .modal-card input:focus{border-color:var(--green)}
+  .modal-btns{display:flex; gap:10px; margin-top:6px}
+  .modal-btns button{flex:1; padding:10px; border:none; border-radius:10px; font-size:.92rem; font-weight:600}
+  .btn-cancel{background:var(--green-soft); color:var(--green-deep)}
+  .btn-ok{background:var(--green); color:#fff}
+  .modal-err{font-size:.8rem; color:var(--red); min-height:1.2em; margin-bottom:4px}
+  .modal-note{font-size:.75rem; color:var(--muted); margin-top:10px}
+
+  @media (min-width:720px){
+    #app{padding-top:28px}
+  }
+</style>
+</head>
+<body>
+
+<!-- 密码门 -->
+<div id="gate">
+  <div class="gate-card">
+    <div class="gate-emoji">🌱</div>
+    <h1>我的一天</h1>
+    <p class="gate-sub">私人日程小站 · 仅自己可见</p>
+    <input type="password" id="gate-pass" placeholder="请输入密码" autocomplete="off">
+    <button id="gate-btn" type="button">进入</button>
+    <p class="gate-err" id="gate-err"></p>
+  </div>
+</div>
+
+<!-- 主应用 -->
+<div id="app" hidden>
+  <header class="top">
+    <div class="top-date" id="h-date">—</div>
+    <div class="top-week" id="h-week"></div>
+  </header>
+
+  <section class="card now-card" id="now-card">
+    <span class="now-label" id="now-label">现在</span>
+    <div class="now-title" id="now-title">加载中…</div>
+    <div class="now-desc" id="now-desc"></div>
+    <div class="now-shui" id="now-shui" hidden></div>
+    <div class="now-next" id="now-next"></div>
+  </section>
+
+  <section class="card">
+    <div class="card-head">🌿 背单词打卡 <span class="side" id="vocab-week"></span></div>
+    <div class="vocab-row">
+      <div class="vocab-count"><b id="vocab-num">0</b>/ <input type="number" id="vocab-goal" min="1" max="50" value="5"> 组</div>
+      <button id="vocab-add" type="button">+1 组</button>
+    </div>
+    <div class="vocab-bar"><i id="vocab-fill"></i></div>
+    <div class="vocab-hint" id="vocab-hint"></div>
+  </section>
+
+  <section class="card">
+    <div class="card-head">📝 备忘录</div>
+    <div class="memo-add">
+      <input type="text" id="memo-text" maxlength="120" placeholder="记点什么…（回车添加）">
+      <input type="date" id="memo-due" title="截止日期（可选）">
+      <button id="memo-btn" type="button">添加</button>
+    </div>
+    <ul id="memo-list"></ul>
+    <p class="memo-empty" id="memo-empty" hidden>暂无备忘，加一条吧~</p>
+  </section>
+
+  <section class="card">
+    <div class="card-head">🗓 今日时间轴</div>
+    <ul id="timeline"></ul>
+  </section>
+
+  <section class="card">
+    <div class="card-head">⚙️ 设置</div>
+    <div class="btn-row">
+      <button class="ghost" id="notify-btn" type="button">到点提醒：关</button>
+      <button class="ghost" id="pass-btn" type="button">修改密码</button>
+      <button class="ghost" id="logout-btn" type="button">退出登录</button>
+    </div>
+    <p class="tiny">备忘与打卡数据仅保存在本设备浏览器中，不上传服务器。课程时间以教务系统为准，国庆等调课请自行留意。</p>
+  </section>
+
+  <footer>五次方的夏天 · 我的一天 🌿</footer>
+</div>
+
+<!-- 修改密码弹窗 -->
+<div id="modal" hidden>
+  <div class="modal-card">
+    <h3>修改密码</h3>
+    <input type="password" id="m-old" placeholder="当前密码" autocomplete="off">
+    <input type="password" id="m-new" placeholder="新密码（至少4位）" autocomplete="off">
+    <input type="password" id="m-new2" placeholder="再输一遍新密码" autocomplete="off">
+    <p class="modal-err" id="m-err"></p>
+    <div class="modal-btns">
+      <button class="btn-cancel" id="m-cancel" type="button">取消</button>
+      <button class="btn-ok" id="m-ok" type="button">确认修改</button>
+    </div>
+    <p class="modal-note">新密码只对本设备生效（记录在浏览器里）。</p>
+  </div>
+</div>
+
+<script>
+/* ================= 配置区（改课表/作息/密码都在这里） ================= */
+var CONFIG = {
+  termStart: '2026-09-07',      // 第 1 教学周的周一
+  termWeeks: 17,                // 学期总教学周数
+  passHash: 'c5e4e89248f8e546847df568b20747caa790ffefc225afca6ba1205f8da55325', // sha256(初始密码)
+  defaultGoal: 5                // 每日背单词默认目标（组）
+};
+
+/* 13 节作息。A=1~3号楼(学验/育才等)+乒乓球馆，B=4~7号楼(吉祥/北碚/徐汇/云间)。
+   两列仅第 3、4 节相差 10 分钟，其余相同。 */
+var PERIODS = {
+  A: { 1:['08:30','09:15'], 2:['09:20','10:05'], 3:['10:20','11:05'], 4:['11:10','11:55'],
+       5:['12:55','13:40'], 6:['13:45','14:30'], 7:['14:40','15:25'], 8:['15:30','16:15'],
+       9:['16:45','17:30'], 10:['17:35','18:20'], 11:['18:30','19:15'], 12:['19:20','20:05'], 13:['20:10','20:55'] },
+  B: { 1:['08:30','09:15'], 2:['09:20','10:05'], 3:['10:30','11:15'], 4:['11:20','12:05'],
+       5:['12:55','13:40'], 6:['13:45','14:30'], 7:['14:40','15:25'], 8:['15:30','16:15'],
+       9:['16:45','17:30'], 10:['17:35','18:20'], 11:['18:30','19:15'], 12:['19:20','20:05'], 13:['20:10','20:55'] }
+};
+
+/* 课程表：day 1=周一…5=周五；p=节次；w=上课周；group=作息列(A/B，按教室楼号)；
+   shui=水课(背单词时段)；online=[起,止]=线上教学周 */
+var COURSES = [
+  { name:'高等数学B·微积分(一)', day:1, p:[1,2],  w:[3,17],  room:'3DM42',  teacher:'雷洪川', cat:'core' },
+  { name:'诚信教育',             day:1, p:[5,6],  w:[6,13],  room:'3DXL21', teacher:'',       cat:'shui', shui:true },
+  { name:'心理健康',             day:1, p:[7,8],  w:[3,17],  room:'4DM32',  teacher:'李雅琼', cat:'shui', shui:true, group:'B' },
+  { name:'军事理论',             day:2, p:[1,2],  w:[6,13],  room:'3DM23',  teacher:'李伟',   cat:'shui', shui:true },
+  { name:'信息技术与数据素养',   day:2, p:[5,6],  w:[9,16],  room:'2D121',  teacher:'陈逍',   cat:'major', online:[10,13] },
+  { name:'会计学基础',           day:2, p:[7,8],  w:[3,17],  room:'3DS21',  teacher:'李雪岑', cat:'major' },
+  { name:'马克思主义基本原理',   day:4, p:[1,2],  w:[3,17],  room:'3DM16',  teacher:'李怡轩', cat:'gen' },
+  { name:'大学英语(一)',         day:4, p:[3,4],  w:[3,17],  room:'3DS31',  teacher:'钱妮娜', cat:'gen' },
+  { name:'高等数学B·微积分(一)', day:4, p:[5,6],  w:[3,17],  room:'3DM42',  teacher:'雷洪川', cat:'core' },
+  { name:'高数习题课',           day:4, p:[7,8],  w:[6,14],  room:'3DM42',  teacher:'雷洪川', cat:'core' },
+  { name:'形势与政策',           day:4, p:[11,12],w:[10,13], room:'3DM25',  teacher:'季晓峰', cat:'shui', shui:true },
+  { name:'马原实践',             day:5, p:[1,2],  w:[13,14], room:'3DM32',  teacher:'李怡轩', cat:'gen' },
+  { name:'专项体育·乒乓球',      day:5, p:[3,4],  w:[3,17],  room:'乒乓球馆', teacher:'张宝玮', cat:'sport', group:'A' },
+  { name:'Python程序设计基础',   day:5, p:[5,6],  w:[3,17],  room:'2DC202', teacher:'陈逍',   cat:'major' },
+  { name:'国家安全教育',         day:5, p:[7,8],  w:[6,13],  room:'3DM16',  teacher:'赵爽',   cat:'shui', shui:true, online:[6,12] }
+];
+
+/* 空闲时段建议（来自《时间安排梳理》）。key: 0=周日,1~5=周一~五,6=周六 */
+var FREE = {
+  0: { morning:{t:'休整 ☀️', d:'睡饱、洗衣服、给家里打个电话'},
+       afternoon:{t:'补作业 + 下周预习', d:'高数优先'},
+       evening:{t:'周计划 30 分钟', d:'下周团务 + 竞赛任务拆解'} },
+  1: { morning:{t:'高数作业当日清', d:''},
+       evening:{t:'团支书周事务', d:'收材料、回班群，批量处理'} },
+  2: { morning:{t:'高数作业 + 预习', d:''},
+       evening:{t:'高数作业 + Python 上机', d:'团务材料今晚截止，减少催办'} },
+  3: { morning:{t:'🏆 竞赛深度工作', d:'BP / 商业计划，2~3 小时不被打断'},
+       afternoon:{t:'专业课复习 + 作业', d:'会计 / Python'},
+       evening:{t:'🏸 羽毛球 / 社团例会', d:''} },
+  4: { evening:{t:'轻复盘', d:'最重的一天，不排新任务'} },
+  5: { morning:{t:'竞赛外联 / 约导师', d:'工作日好约人'},
+       evening:{t:'学长项目固定时段', d:'≤2 小时，到点就停'} },
+  6: { morning:{t:'🏆 竞赛例会 / 协同写作', d:''},
+       afternoon:{t:'🏸 羽毛球 + 休整', d:''},
+       evening:{t:'自由安排', d:''} }
+};
+var FALLBACK = { t:'自由安排', d:'' };
+
+/* ================= 工具函数 ================= */
+var $ = function(id){ return document.getElementById(id); };
+var LS = {
+  get: function(k, d){ try{ var v = localStorage.getItem(k); return v === null ? d : v; }catch(e){ return d; } },
+  set: function(k, v){ try{ localStorage.setItem(k, v); }catch(e){} },
+  del: function(k){ try{ localStorage.removeItem(k); }catch(e){} }
+};
+function pad2(n){ return (n < 10 ? '0' : '') + n; }
+function fmtDate(d){ return d.getFullYear() + '-' + pad2(d.getMonth()+1) + '-' + pad2(d.getDate()); }
+function toMin(hm){ var a = hm.split(':'); return (+a[0]) * 60 + (+a[1]); }
+function toHM(m){ return pad2(Math.floor(m/60)) + ':' + pad2(m % 60); }
+function sha256(str){
+  if (window.crypto && crypto.subtle && crypto.subtle.digest) {
+    var buf = new TextEncoder().encode(str);
+    return crypto.subtle.digest('SHA-256', buf).then(function(h){
+      return Array.prototype.map.call(new Uint8Array(h), function(x){
+        return ('0' + x.toString(16)).slice(-2);
+      }).join('');
+    });
+  }
+  return Promise.reject(new Error('nosubtle'));
+}
+
+/* ================= 学期与课表逻辑 ================= */
+function mondayOf(d){ var x = new Date(d); x.setDate(x.getDate() - ((x.getDay()+6) % 7)); return x; }
+function termWeek(d){
+  var t = new Date(CONFIG.termStart + 'T00:00:00');
+  var diff = Math.floor((new Date(d.getFullYear(), d.getMonth(), d.getDate()) - t) / 86400000);
+  if (diff < 0) return 0;
+  return Math.floor(diff / 7) + 1;
+}
+function inTerm(d){ var w = termWeek(d); return w >= 1 && w <= CONFIG.termWeeks; }
+
+function courseGroup(c){
+  if (c.group) return c.group;
+  var n = parseInt((c.room || '').charAt(0), 10);
+  return (n >= 4 && n <= 7) ? 'B' : 'A';
+}
+function courseSpan(c){
+  var P = PERIODS[courseGroup(c)];
+  return { start: toMin(P[c.p[0]][0]), end: toMin(P[c.p[1]][1]) };
+}
+function isOnline(c, week){ return !!(c.online && week >= c.online[0] && week <= c.online[1]); }
+
+function coursesOn(date){
+  var day = date.getDay(), week = termWeek(date);
+  return COURSES.filter(function(c){
+    return c.day === day && week >= c.w[0] && week <= c.w[1];
+  }).map(function(c){
+    var s = courseSpan(c);
+    return { type:'course', course:c, start:s.start, end:s.end,
+             online: isOnline(c, week) };
+  }).sort(function(a,b){ return a.start - b.start; });
+}
+
+function partOfDay(min){
+  if (min < 720) return 'morning';        // <12:00
+  if (min < 1050) return 'afternoon';     // <17:30
+  return 'evening';
+}
+function freeSuggestion(day, part, startMin){
+  if (part === 'afternoon' && startMin < 810) return { t:'午饭 + 午休 ☕', d:'' };
+  var m = FREE[day] && FREE[day][part];
+  return m || FALLBACK;
+}
+
+/* 生成某天从 08:00 到 21:00 的完整块序列（课程 + 空闲） */
+var DAY_START = 480, DAY_END = 1260, MIN_GAP = 25;
+function buildDay(date){
+  var day = date.getDay();
+  var courses = inTerm(date) ? coursesOn(date) : [];
+  var blocks = [];
+  if (courses.length === 0) {
+    ['morning','afternoon','evening'].forEach(function(part){
+      var s = part === 'morning' ? DAY_START : (part === 'afternoon' ? 720 : 1050);
+      var e = part === 'morning' ? 720 : (part === 'afternoon' ? 1050 : DAY_END);
+      blocks.push({ type:'free', part:part, start:s, end:e, sug:freeSuggestion(day, part, s) });
+    });
+    return blocks;
+  }
+  var cursor = DAY_START;
+  courses.forEach(function(ev){
+    if (ev.start - cursor >= MIN_GAP) {
+      pushFreeBlocks(blocks, day, cursor, ev.start);
+    }
+    blocks.push(ev);
+    cursor = Math.max(cursor, ev.end);
+  });
+  if (DAY_END - cursor >= MIN_GAP) pushFreeBlocks(blocks, day, cursor, DAY_END);
+  return blocks;
+}
+/* 空闲段若跨 12:00 / 17:30 边界则拆成上午/下午/晚上多段 */
+function pushFreeBlocks(blocks, day, s, e){
+  var bounds = [[s, Math.min(e, 720)], [Math.max(s, 720), Math.min(e, 1050)], [Math.max(s, 1050), e]];
+  bounds.forEach(function(b){
+    if (b[1] - b[0] >= 20) {
+      var part = partOfDay(b[0] + 1);
+      blocks.push({ type:'free', part:part, start:b[0], end:b[1], sug:freeSuggestion(day, part, b[0]) });
+    }
+  });
+}
+
+/* ================= 渲染 ================= */
+var WEEK_CN = ['周日','周一','周二','周三','周四','周五','周六'];
+
+function renderHeader(now){
+  var d = now.getDate(), m = now.getMonth() + 1;
+  $('h-date').textContent = m + '月' + d + '日 · ' + WEEK_CN[now.getDay()];
+  var w = termWeek(now), chips = [];
+  if (w >= 1 && w <= CONFIG.termWeeks) {
+    chips.push('第 ' + w + ' 教学周');
+    var cnt = coursesOn(now).reduce(function(s, ev){ return s + (ev.course.p[1] - ev.course.p[0] + 1); }, 0);
+    chips.push('本周 ' + cnt + ' 节课');
+  } else {
+    chips.push('假期模式 🌴');
+  }
+  $('h-week').innerHTML = chips.map(function(c){ return '<span class="chip">' + c + '</span>'; }).join('');
+}
+
+function renderNow(now){
+  var min = now.getHours() * 60 + now.getMinutes();
+  var blocks = buildDay(now);
+  var cur = null, next = null;
+  for (var i = 0; i < blocks.length; i++) {
+    if (min >= blocks[i].start && min < blocks[i].end) cur = blocks[i];
+    if (blocks[i].start > min && !next) next = blocks[i];
+  }
+  var card = $('now-card'), title, desc, shui = null, label = '现在', emoji = '☕';
+
+  if (min < DAY_START) {
+    title = '☀️ 清晨好时光'; desc = '吃早饭，扫一眼今天的时间轴';
+  } else if (min >= DAY_END) {
+    title = '🌙 今天收尾'; desc = '洗漱、简单复盘、早点睡';
+  } else if (cur && cur.type === 'course') {
+    var c = cur.course;
+    emoji = '📚';
+    title = emoji + ' ' + c.name;
+    desc = toHM(cur.start) + '–' + toHM(cur.end) + ' · ' + (cur.online ? '线上教学' : c.room) +
+           (c.teacher ? ' · ' + c.teacher : '');
+    if (c.shui) {
+      label = '水课时段';
+      shui = cur.online ? '🌿 线上课可挂后台 → 正好背单词' : '🌿 水课时间 → 背单词 / 补团务杂事';
+    }
+  } else if (cur) {
+    title = '☕ 空闲 · ' + cur.sug.t;
+    desc = toHM(cur.start) + '–' + toHM(cur.end) + (cur.sug.d ? ' · ' + cur.sug.d : '');
+  } else {
+    title = '☕ 空闲'; desc = '';
+  }
+
+  $('now-label').textContent = label;
+  $('now-title').textContent = title;
+  $('now-desc').textContent = desc;
+  var shuiEl = $('now-shui');
+  if (shui) { shuiEl.textContent = shui; shuiEl.hidden = false; card.classList.add('is-shui'); }
+  else { shuiEl.hidden = true; card.classList.remove('is-shui'); }
+
+  var nx = $('now-next');
+  if (next) {
+    var inMin = next.start - min;
+    var wait = inMin >= 60 ? Math.floor(inMin / 60) + ' 小时' + (inMin % 60 ? ' ' + (inMin % 60) + ' 分' : '') + '后' : inMin + ' 分钟后';
+    var nxName = next.type === 'course' ? next.course.name : '空闲 · ' + next.sug.t;
+    nx.innerHTML = '⏰ 接下来 <b>' + toHM(next.start) + '</b> · ' + nxName + '<span style="color:#a9bbad">（约 ' + wait + '）</span>';
+  } else if (min < DAY_END) {
+    nx.textContent = '⏰ 今天没有接下来的安排啦';
+  } else {
+    nx.textContent = '⏰ 明天的事，明天再说';
+  }
+
+  document.title = title.replace(/^[^ ]+ /, '') + ' | 我的一天';
+}
+
+function renderTimeline(now){
+  var min = now.getHours() * 60 + now.getMinutes();
+  var blocks = buildDay(now);
+  var html = '';
+  blocks.forEach(function(b){
+    var cur = min >= b.start && min < b.end;
+    if (b.type === 'course') {
+      var c = b.course;
+      var dot = c.shui ? 'shui' : (c.cat === 'sport' ? 'sport' : '');
+      var tags = '';
+      if (c.shui) tags += '<span class="tl-tag">水课</span>';
+      if (b.online) tags += '<span class="tl-tag online">线上</span>';
+      html += '<li' + (cur ? ' class="current"' : '') + '><span class="tl-time">' +
+        toHM(b.start) + '-' + toHM(b.end) + '</span><span class="tl-dot ' + dot + '"></span><span>' +
+        '<span class="tl-name">' + c.name + '</span>' + tags +
+        '<div class="tl-meta">' + (b.online ? '线上教学' : c.room) + (c.teacher ? ' · ' + c.teacher : '') + '</div></span></li>';
+    } else {
+      html += '<li' + (cur ? ' class="current"' : '') + '><span class="tl-time">' +
+        toHM(b.start) + '-' + toHM(b.end) + '</span><span class="tl-dot free"></span><span>' +
+        '<span class="tl-name">' + b.sug.t + '</span>' +
+        (b.sug.d ? '<div class="tl-meta">' + b.sug.d + '</div>' : '') + '</span></li>';
+    }
+  });
+  $('timeline').innerHTML = html;
+}
+
+/* ================= 背单词打卡 ================= */
+function mondayKey(d){ return fmtDate(mondayOf(d)); }
+function loadVocab(){
+  var today = fmtDate(new Date());
+  var v;
+  try { v = JSON.parse(LS.get('myday-vocab', '{}')); } catch(e){ v = {}; }
+  if (v.date !== today) { v.date = today; v.count = 0; }
+  if (!v.goal || v.goal < 1) v.goal = CONFIG.defaultGoal;
+  if (!v.history) v.history = {};
+  return v;
+}
+function saveVocab(v){ LS.set('myday-vocab', JSON.stringify(v)); }
+function renderVocab(){
+  var v = loadVocab();
+  $('vocab-num').textContent = v.count;
+  $('vocab-goal').value = v.goal;
+  var pct = Math.min(100, Math.round(v.count / v.goal * 100));
+  var fill = $('vocab-fill');
+  fill.style.width = pct + '%';
+  fill.className = v.count >= v.goal ? 'done' : '';
+  $('vocab-hint').textContent = v.count >= v.goal
+    ? '今日目标达成 🎉 水课多背一组的都是卷王'
+    : '还差 ' + (v.goal - v.count) + ' 组 · 一组约 15~20 分钟';
+  $('vocab-week').textContent = '本周累计 ' + (v.history[mondayKey(new Date())] || 0) + ' 组';
+}
+$('vocab-add').addEventListener('click', function(){
+  var v = loadVocab();
+  v.count++;
+  var k = mondayKey(new Date());
+  v.history[k] = (v.history[k] || 0) + 1;
+  saveVocab(v);
+  renderVocab();
+});
+$('vocab-goal').addEventListener('change', function(){
+  var g = Math.max(1, Math.min(50, parseInt(this.value, 10) || CONFIG.defaultGoal));
+  var v = loadVocab();
+  v.goal = g;
+  saveVocab(v);
+  renderVocab();
+});
+
+/* ================= 备忘录 ================= */
+function loadMemos(){
+  try { var a = JSON.parse(LS.get('myday-memos', '[]')); return Array.isArray(a) ? a : []; }
+  catch(e){ return []; }
+}
+function saveMemos(a){ LS.set('myday-memos', JSON.stringify(a)); }
+function renderMemos(){
+  var memos = loadMemos();
+  var today = fmtDate(new Date());
+  memos.sort(function(a, b){
+    if (!!a.done !== !!b.done) return a.done ? 1 : -1;
+    return b.created - a.created;
+  });
+  var list = $('memo-list');
+  if (memos.length === 0) { list.innerHTML = ''; $('memo-empty').hidden = false; return; }
+  $('memo-empty').hidden = true;
+  var html = '';
+  memos.forEach(function(m){
+    var badge = '';
+    if (m.due && !m.done) {
+      if (m.due < today) {
+        var od = Math.round((new Date(today) - new Date(m.due)) / 86400000);
+        badge = '<span class="badge over">已过期 ' + od + ' 天</span>';
+      } else if (m.due === today) {
+        badge = '<span class="badge today">今天截止</span>';
+      } else {
+        badge = '<span class="badge future">' + m.due.slice(5).replace('-', '/') + ' 截止</span>';
+      }
+    }
+    html += '<li' + (m.done ? ' class="memo-done"' : '') + '>' +
+      '<input type="checkbox" class="memo-check" data-id="' + m.id + '"' + (m.done ? ' checked' : '') + '>' +
+      '<span class="memo-body">' + escapeHtml(m.text) + (badge ? '<div class="memo-meta">' + badge + '</div>' : '') + '</span>' +
+      '<button class="memo-del" data-id="' + m.id + '" title="删除">✕</button></li>';
+  });
+  list.innerHTML = html;
+}
+function escapeHtml(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function addMemo(){
+  var t = $('memo-text').value.trim();
+  if (!t) { $('memo-text').focus(); return; }
+  var d = $('memo-due').value;
+  var memos = loadMemos();
+  memos.push({ id: Date.now(), text: t, due: d || null, done: false, created: Date.now() });
+  saveMemos(memos);
+  $('memo-text').value = ''; $('memo-due').value = '';
+  renderMemos();
+}
+$('memo-btn').addEventListener('click', addMemo);
+$('memo-text').addEventListener('keydown', function(e){ if (e.key === 'Enter') addMemo(); });
+$('memo-list').addEventListener('click', function(e){
+  var id = e.target.getAttribute && e.target.getAttribute('data-id');
+  if (!id) return;
+  var memos = loadMemos();
+  if (e.target.classList.contains('memo-del')) {
+    saveMemos(memos.filter(function(m){ return String(m.id) !== id; }));
+  } else if (e.target.classList.contains('memo-check')) {
+    memos.forEach(function(m){ if (String(m.id) === id) m.done = e.target.checked; });
+    saveMemos(memos);
+  }
+  renderMemos();
+});
+
+/* ================= 到点提醒 ================= */
+var notified = {};
+function notifyEnabled(){ return LS.get('myday-notify', '0') === '1'; }
+function renderNotifyBtn(){
+  var on = notifyEnabled();
+  var b = $('notify-btn');
+  b.textContent = '到点提醒：' + (on ? '开' : '关');
+  b.className = 'ghost' + (on ? ' on' : '');
+}
+$('notify-btn').addEventListener('click', function(){
+  if (notifyEnabled()) { LS.set('myday-notify', '0'); renderNotifyBtn(); return; }
+  if (!('Notification' in window)) { alert('这个浏览器不支持通知'); return; }
+  Notification.requestPermission().then(function(p){
+    if (p === 'granted') { LS.set('myday-notify', '1'); renderNotifyBtn(); }
+    else alert('需要允许通知权限才能到点提醒');
+  });
+});
+function checkNotify(now){
+  if (!notifyEnabled() || !('Notification' in window) || Notification.permission !== 'granted') return;
+  var min = now.getHours() * 60 + now.getMinutes();
+  var courses = coursesOn(now);
+  courses.forEach(function(ev){
+    var key = fmtDate(now) + ev.course.name + ev.start;
+    if (!notified[key] && min >= ev.start && min < ev.start + 2) {
+      notified[key] = true;
+      var body = (ev.online ? '线上 · ' : ev.course.room + ' · ') + toHM(ev.start) + ' 上课';
+      if (ev.course.shui) body += '（水课，记得背单词 🌿）';
+      try { new Notification('📚 ' + ev.course.name, { body: body }); } catch(e){}
+    }
+  });
+}
+
+/* ================= 认证 ================= */
+function currentHash(){ return LS.get('myday-hash', '') || CONFIG.passHash; }
+function tryLogin(){
+  var pass = $('gate-pass').value;
+  if (!pass) return;
+  sha256(pass).then(function(h){
+    if (h === currentHash()) {
+      LS.set('myday-auth', '1');
+      enterApp();
+    } else {
+      $('gate-err').textContent = '密码不对哦，再想想 ~';
+      $('gate-pass').value = '';
+      $('gate-pass').focus();
+    }
+  }).catch(function(){
+    $('gate-err').textContent = '浏览器不支持安全登录，请用 Chrome / Edge 打开';
+  });
+}
+function enterApp(){
+  $('gate').hidden = true;
+  $('app').hidden = false;
+  tick();
+  renderVocab();
+  renderMemos();
+  renderNotifyBtn();
+}
+function logout(){
+  LS.del('myday-auth');
+  $('app').hidden = true;
+  $('gate').hidden = false;
+  $('gate-pass').value = '';
+  $('gate-err').textContent = '';
+  document.title = '我的一天';
+}
+$('gate-btn').addEventListener('click', tryLogin);
+$('gate-pass').addEventListener('keydown', function(e){ if (e.key === 'Enter') tryLogin(); });
+$('logout-btn').addEventListener('click', logout);
+
+/* 修改密码 */
+$('pass-btn').addEventListener('click', function(){
+  $('m-old').value = ''; $('m-new').value = ''; $('m-new2').value = ''; $('m-err').textContent = '';
+  $('modal').hidden = false;
+});
+$('m-cancel').addEventListener('click', function(){ $('modal').hidden = true; });
+$('m-ok').addEventListener('click', function(){
+  var oldP = $('m-old').value, newP = $('m-new').value, newP2 = $('m-new2').value;
+  if (newP.length < 4) { $('m-err').textContent = '新密码至少 4 位'; return; }
+  if (newP !== newP2) { $('m-err').textContent = '两次输入的新密码不一致'; return; }
+  sha256(oldP).then(function(h){
+    if (h !== currentHash()) { $('m-err').textContent = '当前密码不对'; return; }
+    return sha256(newP).then(function(nh){
+      LS.set('myday-hash', nh);
+      $('modal').hidden = true;
+      alert('密码已修改（仅本设备生效）');
+    });
+  }).catch(function(){ $('m-err').textContent = '浏览器不支持，请用 Chrome / Edge'; });
+});
+
+/* ================= 主循环 ================= */
+function tick(){
+  var now = new Date();
+  renderHeader(now);
+  renderNow(now);
+  renderTimeline(now);
+  var editing = document.activeElement === $('vocab-goal');
+  if (!editing) renderVocab();
+  checkNotify(now);
+}
+if (LS.get('myday-auth', '') === '1') enterApp();
+else $('gate-pass').focus();
+setInterval(tick, 30000);
+document.addEventListener('visibilitychange', function(){ if (!document.hidden) tick(); });
+</script>
+</body>
+</html>
