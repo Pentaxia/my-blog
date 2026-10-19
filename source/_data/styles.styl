@@ -92,195 +92,763 @@ a
   &:hover
     color: green-primary
 
-// ========== 首页板块样式 ==========
+// ========== 首页 · 作品 × 流水 ==========
 
-home-gap = 28px
-home-radius = 12px
+// 强调色板
+acc-green = #4a7c59
+acc-amber = #b07d29
+acc-blue = #2f7f79
+acc-violet = #6f5fa0
+acc-slate = #6a7a70
 
-// 生活文章板块（绿色系）
-.home-sections
-  max-width: 800px
-  margin: 0 auto
-  padding: 10px 0
+.home-v2
+  --acc: acc-green
+  --acc-soft: #eaf2e4
+  padding-bottom: 40px
 
-.home-section
-  margin-bottom: home-gap
-  border-radius: home-radius
-  overflow: hidden
+// ---------- 主视觉 ----------
+.hero
+  display: grid
+  grid-template-columns: 1.15fr 0.85fr
+  gap: 24px
+  align-items: center
+  padding: 26px 8px 40px
+  position: relative
 
-  // 生活文章（绿色）
-  &:nth-child(1)
-    background: #f0f4ed
-    border: 1px solid #c5d4be
-    box-shadow: 0 2px 10px rgba(74, 124, 89, 0.08)
+.hero-copy
+  min-width: 0
 
-  // 创赛日志（暖黄色）
-  &:nth-child(2)
-    background: #fefbf0
-    border: 1px solid #e8dcab
-    box-shadow: 0 2px 10px rgba(184, 149, 48, 0.08)
+.hero-tag
+  display: inline-flex
+  align-items: center
+  gap: 7px
+  font-size: 0.78rem
+  letter-spacing: 0.06em
+  color: acc-green
+  background: #eef5e8
+  border: 1px solid #d9e8cd
+  padding: 5px 12px
+  border-radius: 20px
+  margin-bottom: 18px
 
-.home-section-header
-  padding: 18px 24px 8px
+.dot-live
+  width: 6px
+  height: 6px
+  border-radius: 50%
+  background: #6aa84f
+  box-shadow: 0 0 0 3px rgba(106, 168, 79, 0.18)
+  display: inline-block
 
-  .home-section-title
-    font-size: 1.4em
-    font-weight: 600
+.hero-title
+  font-size: clamp(2rem, 4.4vw, 2.9rem)
+  line-height: 1.22
+  font-weight: 700
+  color: #22352a
+  letter-spacing: -0.02em
+  margin: 0 0 16px
+
+  .hl
+    position: relative
+    color: acc-green
+    display: inline-block
+
+    &::after
+      content: ''
+      position: absolute
+      left: -2px
+      right: -2px
+      bottom: 2px
+      height: 9px
+      background: #d6e9c4
+      border-radius: 4px
+      z-index: -1
+      transform: rotate(-0.6deg)
+
+.hero-sub
+  font-size: 0.95rem
+  line-height: 1.85
+  color: #5b7163
+  margin: 0 0 22px
+  max-width: 30em
+
+.hero-actions
+  display: flex
+  gap: 10px
+  flex-wrap: wrap
+
+.btn-solid
+  display: inline-flex
+  align-items: center
+  gap: 6px
+  background: acc-green
+  color: #fff !important
+  padding: 10px 20px
+  border-radius: 24px
+  font-size: 0.9rem
+  text-decoration: none
+  border-bottom: none !important
+  box-shadow: 0 4px 14px rgba(74, 124, 89, 0.22)
+  transition: transform 0.22s ease, box-shadow 0.22s ease, background 0.22s ease
+
+  &:hover
+    background: #3f6e4c
+    transform: translateY(-2px)
+    box-shadow: 0 8px 20px rgba(74, 124, 89, 0.28)
+
+  span
+    font-size: 0.8em
+    opacity: 0.8
+
+.btn-line
+  display: inline-flex
+  align-items: center
+  padding: 10px 18px
+  border-radius: 24px
+  font-size: 0.9rem
+  color: #4a6455 !important
+  background: #fff
+  border: 1px solid #dbe7d4 !important
+  text-decoration: none
+  border-bottom: 1px solid #dbe7d4 !important
+  transition: border-color 0.2s ease, color 0.2s ease
+
+  &:hover
+    border-color: #b7d0a6 !important
+    color: acc-green !important
+
+.hero-art
+  position: relative
+  display: flex
+  justify-content: center
+  align-items: center
+  min-height: 260px
+
+.hero-blob
+  position: absolute
+  width: 250px
+  height: 250px
+  background: radial-gradient(circle at 35% 30%, #e8f2dd, #dcecd0)
+  border-radius: 56% 44% 50% 50% / 48% 52% 48% 52%
+  animation: blob-morph 14s ease-in-out infinite
+  z-index: 0
+
+.hero-mascot
+  position: relative
+  z-index: 1
+  height: 240px
+  width: auto
+  object-fit: contain
+  filter: drop-shadow(0 12px 18px rgba(74, 124, 89, 0.16))
+  animation: hero-float 5s ease-in-out infinite
+
+.float-chip
+  position: absolute
+  z-index: 2
+  background: #fff
+  border: 1px solid #e2ede0
+  color: #4a6455
+  font-size: 0.72rem
+  padding: 5px 11px
+  border-radius: 14px
+  box-shadow: 0 3px 10px rgba(60, 90, 70, 0.08)
+  white-space: nowrap
+  animation: chip-float 6s ease-in-out infinite
+
+  &.fc1
+    top: 12%
+    left: 2%
+    animation-delay: 0s
+
+  &.fc2
+    top: 40%
+    right: 0%
+    animation-delay: 1.4s
+
+  &.fc3
+    bottom: 16%
+    left: 6%
+    animation-delay: 2.6s
+
+@keyframes blob-morph
+  0%, 100%
+    border-radius: 56% 44% 50% 50% / 48% 52% 48% 52%
+    transform: rotate(0deg)
+  50%
+    border-radius: 44% 56% 46% 54% / 54% 46% 54% 46%
+    transform: rotate(4deg)
+
+@keyframes hero-float
+  0%, 100%
+    transform: translateY(0)
+  50%
+    transform: translateY(-9px)
+
+@keyframes chip-float
+  0%, 100%
+    transform: translateY(0)
+  50%
+    transform: translateY(-6px)
+
+// ---------- 区块标题 ----------
+.sec
+  padding: 8px 0 34px
+
+.sec-hd
+  display: flex
+  align-items: baseline
+  gap: 12px
+  margin-bottom: 16px
+  padding-bottom: 10px
+  border-bottom: 1px solid #e7efe1
+
+  h2
+    font-size: 1.18rem
+    font-weight: 700
+    color: #22352a
     margin: 0
-    display: flex
-    align-items: center
+    letter-spacing: -0.01em
+    white-space: nowrap
 
-    // 生活板块标题
-    .home-section:nth-child(1) &
-      color: #4a7c59
+  p
+    font-size: 0.8rem
+    color: #90a396
+    margin: 0
+    line-height: 1.5
 
-    // 创赛板块标题
-    .home-section:nth-child(2) &
-      color: #b89530
+.sec-count
+  display: inline-block
+  margin-left: 7px
+  font-size: 0.68rem
+  font-weight: 600
+  color: acc-green
+  background: #eaf2e4
+  border-radius: 9px
+  padding: 1px 7px
+  vertical-align: 2px
 
-    .home-section-icon
-      margin-right: 8px
-      font-size: 1.1em
+.sec-more
+  display: inline-flex
+  align-items: center
+  gap: 5px
+  font-size: 0.83rem
+  color: #6d8377 !important
+  text-decoration: none
+  border-bottom: none !important
+  margin-top: 4px
+  transition: color 0.2s ease, gap 0.2s ease
 
-  .home-section-desc
+  span
+    transition: transform 0.2s ease
+
+  &:hover
+    color: acc-green !important
+
+    span
+      transform: translateX(3px)
+
+.empty
+  color: #a8b8ac
+  font-size: 0.88rem
+
+  code
+    background: #f2f6ee
+    padding: 1px 5px
+    border-radius: 4px
     font-size: 0.85em
-    margin: 4px 0 0
-    opacity: 0.7
 
-    .home-section:nth-child(1) &
-      color: #7a9b7e
+// ---------- 作品卡 ----------
+.work-grid
+  display: grid
+  grid-template-columns: 1fr 1fr
+  gap: 14px
 
-    .home-section:nth-child(2) &
-      color: #b0a070
+.work-card
+  --acc: acc-green
+  --acc-soft: #eaf2e4
+  position: relative
+  background: #fff
+  border: 1px solid #e3ecdd
+  border-radius: 16px
+  overflow: hidden
+  display: flex
+  flex-direction: column
+  transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.3, 1), box-shadow 0.28s ease, border-color 0.28s ease
 
-.home-post-list
-  padding: 4px 24px
+  &::before
+    content: ''
+    position: absolute
+    top: 0
+    left: 0
+    right: 0
+    height: 3px
+    background: var(--acc)
+    opacity: 0.85
 
-.home-post-card
-  padding: 12px 0
-  border-bottom: 1px dashed transparent
-  transition: background 0.2s ease
-  border-radius: 6px
+  &:hover
+    transform: translateY(-4px)
+    border-color: #d2e2c8
+    box-shadow: 0 14px 32px rgba(64, 96, 72, 0.12)
 
-  // 生活板块文章
-  .home-section:nth-child(1) &
-    border-bottom-color: #d5e0cc
+  &.acc-green
+    --acc: acc-green
+    --acc-soft: #eaf2e4
 
-    &:hover
-      background: #e6ecde
+  &.acc-amber
+    --acc: acc-amber
+    --acc-soft: #fbf1de
 
-  // 创赛板块文章
-  .home-section:nth-child(2) &
-    border-bottom-color: #f0e4c0
+  &.acc-blue
+    --acc: acc-blue
+    --acc-soft: #e3f1ef
 
-    &:hover
-      background: #fbf3dc
+  &.acc-violet
+    --acc: acc-violet
+    --acc-soft: #eeebf7
 
-  &:last-child
-    border-bottom: none
+  &.acc-slate
+    --acc: #6a7a70
+    --acc-soft: #eef1ee
 
-.home-post-link
+.work-lg
+  grid-column: 1 / -1
+
+  .work-name
+    font-size: 1.6rem
+
+  .work-metrics
+    gap: 26px
+
+    .wm b
+      font-size: 1.65rem
+
+.work-head
   display: flex
   align-items: center
-  text-decoration: none
-  border-bottom: none !important
-  padding: 0 8px
+  gap: 10px
+  padding: 16px 20px 0
 
-  .home-post-date
-    font-size: 0.85em
-    margin-right: 16px
-    white-space: nowrap
+.work-status
+  font-size: 0.7rem
+  color: #6d8377
+  background: #f3f6f1
+  border: 1px solid #e4ebe0
+  padding: 2px 9px
+  border-radius: 10px
+  letter-spacing: 0.02em
 
-    .home-section:nth-child(1) &
-      color: #7a9b7e
+  &.is-live
+    color: #3f6e4c
+    background: #edf6e7
+    border-color: #d3e7c6
 
-    .home-section:nth-child(2) &
-      color: #b0a070
+.work-period
+  margin-left: auto
+  font-size: 0.72rem
+  color: #a4b4a8
+  font-variant-numeric: tabular-nums
 
-  .home-post-title
-    flex: 1
-    font-size: 0.95em
-    overflow: hidden
-    text-overflow: ellipsis
-    white-space: nowrap
+.work-body
+  padding: 12px 20px 18px
+  display: flex
+  flex-direction: column
+  flex: 1
 
-    .home-section:nth-child(1) &
-      color: #2d4a32
+.work-name
+  font-size: 1.22rem
+  font-weight: 700
+  color: #22352a
+  margin: 0 0 3px
+  letter-spacing: -0.01em
 
-    .home-section:nth-child(2) &
-      color: #4a3d10
+.work-sub
+  font-size: 0.8rem
+  color: var(--acc)
+  margin: 0 0 11px
+  font-weight: 500
 
-    &:hover
-      text-decoration: none
+.work-desc
+  font-size: 0.845rem
+  line-height: 1.78
+  color: #5d7365
+  margin: 0 0 15px
 
-  .home-post-tag
-    font-size: 0.7em
-    padding: 2px 8px
+.work-metrics
+  display: flex
+  gap: 20px
+  flex-wrap: wrap
+  padding: 12px 0
+  border-top: 1px dashed #e6efe0
+  border-bottom: 1px dashed #e6efe0
+  margin-bottom: 14px
+
+  .wm
+    display: flex
+    flex-direction: column
+    gap: 1px
+
+    b
+      font-size: 1.2rem
+      font-weight: 700
+      color: #22352a
+      font-variant-numeric: tabular-nums
+      line-height: 1.1
+
+    span
+      font-size: 0.68rem
+      color: #9aac9f
+      letter-spacing: 0.02em
+
+.work-points
+  list-style: none
+  margin: 0 0 16px
+  padding: 0
+
+  li
+    position: relative
+    padding-left: 15px
+    font-size: 0.82rem
+    line-height: 1.75
+    color: #5d7365
+    margin-bottom: 6px
+
+    &::before
+      content: ''
+      position: absolute
+      left: 2px
+      top: 0.66em
+      width: 5px
+      height: 5px
+      border-radius: 50%
+      background: var(--acc)
+      opacity: 0.55
+
+.work-foot
+  margin-top: auto
+  display: flex
+  align-items: center
+  gap: 10px
+  flex-wrap: wrap
+  padding-top: 2px
+
+.work-role
+  font-size: 0.74rem
+  color: #7d9184
+  background: var(--acc-soft)
+  padding: 3px 9px
+  border-radius: 8px
+
+.work-stack
+  display: flex
+  gap: 5px
+  flex-wrap: wrap
+  margin-left: auto
+
+  span
+    font-size: 0.68rem
+    color: #96a89b
+    border: 1px solid #e8efe3
+    border-radius: 6px
+    padding: 1px 6px
+
+.work-awards
+  display: flex
+  gap: 6px
+  flex-wrap: wrap
+  margin-top: 10px
+
+.award
+  font-size: 0.7rem
+  color: #8a6a1f
+  background: #fdf6e4
+  border: 1px solid #f0e2bd
+  border-radius: 7px
+  padding: 2px 8px
+
+// ---------- 产出流水 ----------
+.sec-log
+  position: relative
+
+.log-line
+  position: relative
+  padding-left: 0
+  margin-top: 4px
+
+  &::before
+    content: ''
+    position: absolute
+    left: 74px
+    top: 6px
+    bottom: 12px
+    width: 1px
+    background: linear-gradient(180deg, #dbe8d2 0%, #e8f0e2 70%, transparent 100%)
+
+.log-month
+  position: relative
+  margin: 6px 0 12px
+  padding-left: 0
+
+  span
+    display: inline-block
+    font-size: 0.72rem
+    font-weight: 600
+    letter-spacing: 0.08em
+    color: #8ba18f
+    background: #f4f9f0
+    border: 1px solid #e3eddb
+    padding: 2px 11px
     border-radius: 10px
-    margin-left: 8px
-    white-space: nowrap
 
-    .home-section:nth-child(1) &
-      background: #e8f0e3
-      color: #3d6b4e
+.log-item
+  display: grid
+  grid-template-columns: 60px 28px 1fr
+  align-items: start
+  gap: 0
+  padding: 9px 0
 
-    .home-section:nth-child(2) &
-      background: #fcf0d4
-      color: #9c7d20
+.log-date
+  display: flex
+  flex-direction: column
+  text-align: right
+  padding-right: 14px
+  padding-top: 1px
 
-.home-empty
-  text-align: center
-  padding: 20px 0
-  color: #aaa
-  font-size: 0.9em
+  b
+    font-size: 0.8rem
+    font-weight: 600
+    color: #4a6455
+    font-variant-numeric: tabular-nums
 
-.home-more-btn
-  display: inline-block
-  margin: 12px 24px 20px
-  padding: 6px 20px
-  border-radius: 20px
-  font-size: 0.85em
+  span
+    font-size: 0.66rem
+    color: #b3c1b6
+    font-variant-numeric: tabular-nums
+
+.log-dot
+  width: 9px
+  height: 9px
+  border-radius: 50%
+  background: #fff
+  border: 2px solid #b9d0aa
+  margin: 5px auto 0
+  position: relative
+  z-index: 1
+  transition: transform 0.2s ease, border-color 0.2s ease
+
+  &.acc-green
+    border-color: acc-green
+
+  &.acc-amber
+    border-color: acc-amber
+
+  &.acc-blue
+    border-color: acc-blue
+
+  &.acc-violet
+    border-color: acc-violet
+
+  &.acc-slate
+    border-color: #8d9c92
+
+  .log-item:hover &
+    transform: scale(1.3)
+
+.log-body
+  min-width: 0
+  padding-left: 12px
+  padding-bottom: 2px
+
+.log-title
+  font-size: 0.865rem
+  line-height: 1.65
+  color: #3f5449
+  margin-bottom: 3px
+  transition: color 0.2s ease
+
+  .log-item:hover &
+    color: #22352a
+
+.log-meta
+  display: flex
+  align-items: center
+  gap: 8px
+  flex-wrap: wrap
+
+.log-proj
+  font-size: 0.68rem
+  padding: 1px 7px
+  border-radius: 6px
+  background: #f2f6ef
+  color: #6d8377
+
+  &.acc-green
+    background: #eaf2e4
+    color: #3f6e4c
+
+  &.acc-amber
+    background: #fbf1de
+    color: #8a6a1f
+
+  &.acc-blue
+    background: #e3f1ef
+    color: #2a6d68
+
+  &.acc-violet
+    background: #eeebf7
+    color: #5d4f8a
+
+  &.acc-slate
+    background: #eef1ee
+    color: #64746a
+
+.log-kind
+  font-size: 0.66rem
+  color: #a9b8ac
+
+// ---------- 最近文章 ----------
+.post-strip
+  display: grid
+  grid-template-columns: 1fr 1fr
+  gap: 10px
+
+.strip-card
+  display: flex
+  align-items: center
+  gap: 10px
+  background: #fff
+  border: 1px solid #e8efe3
+  border-radius: 11px
+  padding: 12px 15px
   text-decoration: none
-  border-bottom: none !important
-  transition: all 0.25s ease
+  border-bottom: 1px solid #e8efe3 !important
+  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease
 
-  .home-section:nth-child(1) &
-    background: #4a7c59
-    color: white
+  &:hover
+    border-color: #cfe0c4 !important
+    transform: translateY(-2px)
+    box-shadow: 0 6px 16px rgba(64, 96, 72, 0.08)
 
-    &:hover
-      background: #3d6b4e
-      transform: scale(1.03)
+.strip-date
+  font-size: 0.68rem
+  color: #a9b8ac
+  font-variant-numeric: tabular-nums
+  flex: 0 0 auto
 
-  .home-section:nth-child(2) &
-    background: #b89530
-    color: white
+.strip-title
+  font-size: 0.855rem
+  color: #3f5449
+  overflow: hidden
+  text-overflow: ellipsis
+  white-space: nowrap
 
-    &:hover
-      background: #9c7d20
-      transform: scale(1.03)
+.strip-cat
+  margin-left: auto
+  font-size: 0.64rem
+  color: #8ba18f
+  background: #f4f9f0
+  padding: 1px 6px
+  border-radius: 5px
+  flex: 0 0 auto
 
-// 手机端适配
-@media (max-width: 767px)
-  .home-sections
-    padding: 0 4px
+// ---------- 滚动出现 ----------
+.reveal
+  opacity: 0
+  transform: translateY(14px)
+  transition: opacity 0.55s ease, transform 0.55s cubic-bezier(0.2, 0.8, 0.3, 1)
 
-  .home-section-header
-    padding: 14px 16px 6px
+  &.is-in
+    opacity: 1
+    transform: translateY(0)
 
-  .home-post-list
-    padding: 4px 16px
+@media (prefers-reduced-motion: reduce)
+  .reveal
+    opacity: 1
+    transform: none
+    transition: none
 
-  .home-post-link
-    flex-wrap: wrap
+  .hero-mascot, .hero-blob, .float-chip
+    animation: none
 
-    .home-post-title
-      white-space: normal
-      width: 100%
-      margin-top: 2px
+// ---------- 响应式 ----------
+@media (max-width: 900px)
+  .hero
+    grid-template-columns: 1fr
+    gap: 8px
+    padding: 14px 4px 26px
 
-  .home-more-btn
-    margin: 10px 16px 16px
+  .hero-art
+    order: -1
+    min-height: 180px
+
+  .hero-mascot
+    height: 155px
+
+  .hero-blob
+    width: 175px
+    height: 175px
+
+  .float-chip
+    font-size: 0.66rem
+    padding: 4px 9px
+
+    &.fc1
+      top: 6%
+      left: 6%
+
+    &.fc2
+      top: 34%
+      right: 4%
+
+    &.fc3
+      bottom: 10%
+      left: 10%
+
+  .hero-title
+    font-size: 1.75rem
+
+  .hero-sub
+    font-size: 0.88rem
+
+  .work-grid
+    grid-template-columns: 1fr
+
+  .work-lg
+    .work-name
+      font-size: 1.35rem
+
+    .work-metrics
+      gap: 18px
+
+      .wm b
+        font-size: 1.3rem
+
+  .sec-hd
+    flex-direction: column
+    gap: 3px
+
+  .log-line
+    &::before
+      left: 52px
+
+  .log-item
+    grid-template-columns: 40px 24px 1fr
+
+  .log-date
+    padding-right: 8px
+
+    b
+      font-size: 0.74rem
+
+    span
+      font-size: 0.62rem
+
+  .log-body
+    padding-left: 9px
+
+  .log-title
+    font-size: 0.82rem
+
+  .post-strip
+    grid-template-columns: 1fr
 
 // ========== Waline 评论系统样式 ==========
 
@@ -1035,3 +1603,273 @@ body.intro-lock
   .intro-mascot, .intro-mascot *,
   .intro-bubble, .heart-half, .draw-dot, .heart-svg
     animation-play-state: paused !important
+
+// ========== /log/ 产出流水页 ==========
+
+.log-page
+  padding-bottom: 20px
+
+.log-hero
+  padding: 10px 0 22px
+
+.log-h1
+  font-size: clamp(1.7rem, 3.6vw, 2.3rem)
+  font-weight: 700
+  color: #22352a
+  margin: 14px 0 10px
+  letter-spacing: -0.02em
+
+.log-lead
+  font-size: 0.88rem
+  line-height: 1.85
+  color: #5d7365
+  max-width: 42em
+  margin: 0 0 18px
+
+.log-stats
+  display: flex
+  gap: 10px
+  flex-wrap: wrap
+
+  .ls
+    display: flex
+    align-items: baseline
+    gap: 6px
+    background: #fff
+    border: 1px solid #e6efe0
+    border-radius: 10px
+    padding: 7px 13px
+
+    b
+      font-size: 1.05rem
+      font-weight: 700
+      color: #22352a
+      font-variant-numeric: tabular-nums
+
+    span
+      font-size: 0.72rem
+      color: #8ba18f
+
+    &.acc-green
+      border-color: #d6e6c9
+      b
+        color: #3f6e4c
+
+    &.acc-amber
+      border-color: #f0e2bd
+      b
+        color: #8a6a1f
+
+    &.acc-blue
+      border-color: #cfe4e1
+      b
+        color: #2a6d68
+
+    &.acc-violet
+      border-color: #ded8ee
+      b
+        color: #5d4f8a
+
+.log-filter
+  display: flex
+  gap: 6px
+  flex-wrap: wrap
+  margin-bottom: 16px
+  padding-bottom: 14px
+  border-bottom: 1px solid #e7efe1
+
+  .lf
+    font-size: 0.76rem
+    color: #6d8377
+    background: #f5f9f2
+    border: 1px solid #e6efe0
+    border-radius: 14px
+    padding: 4px 12px
+    cursor: pointer
+    transition: all 0.18s ease
+    font-family: inherit
+
+    em
+      font-style: normal
+      font-size: 0.66rem
+      opacity: 0.6
+      margin-left: 2px
+
+    &:hover
+      border-color: #cfe0c4
+      color: #3f6e4c
+
+    &.on
+      background: acc-green
+      border-color: acc-green
+      color: #fff
+
+      em
+        opacity: 0.8
+
+.log-line-full
+  margin-top: 0
+
+  .log-item
+    padding: 10px 0
+
+  .log-title
+    font-size: 0.885rem
+
+.log-note
+  margin-top: 22px
+  padding-top: 14px
+  border-top: 1px dashed #e6efe0
+  font-size: 0.74rem
+  color: #a3b3a7
+  line-height: 1.7
+
+  code
+    background: #f2f6ee
+    padding: 1px 5px
+    border-radius: 4px
+    font-size: 0.92em
+
+@media (max-width: 900px)
+  .log-stats .ls
+    padding: 5px 10px
+
+// ========== 首页外层容器重置（去掉主题白卡，让 hero 通栏） ==========
+
+.post-block:has(.home-v2),
+.post-block.is-home-block
+  background: transparent
+  border: none
+  box-shadow: none
+  padding: 0
+  margin-bottom: 0
+
+  .post-header
+    display: none !important
+
+  .post-body
+    padding: 0
+    text-align: left
+
+  .post-eof
+    display: none
+
+// 首页正文排版不继承文章样式
+.home-v2
+  font-size: 1rem
+  line-height: 1.6
+
+  h1, h2, h3
+    border-bottom: none !important
+    margin: 0
+
+  a
+    border-bottom: none
+
+  ul
+    margin: 0
+    padding: 0
+
+// ========== 关于页 ==========
+
+.about-v2
+  max-width: 44em
+
+  .about-lead
+    margin-bottom: 30px
+    padding: 20px 22px
+    background: linear-gradient(135deg, #f2f8ec 0%, #f8fbf5 100%)
+    border: 1px solid #e0edcd
+    border-left: 3px solid acc-green
+    border-radius: 10px
+
+  .about-line
+    font-size: 0.95rem
+    line-height: 1.9
+    color: #3f5449
+    margin: 0 0 6px
+
+    &:last-child
+      margin-bottom: 0
+
+  h2
+    font-size: 1.05rem
+    font-weight: 700
+    color: #22352a
+    margin: 30px 0 12px
+    padding-left: 11px
+    border-left: 3px solid #c9dfb6
+    border-bottom: none !important
+
+  p
+    font-size: 0.9rem
+    line-height: 1.9
+    color: #5d7365
+    margin-bottom: 12px
+
+.about-works
+  display: flex
+  flex-direction: column
+  gap: 10px
+  margin: 4px 0 8px
+
+  .aw
+    background: #fff
+    border: 1px solid #e8efe3
+    border-radius: 11px
+    padding: 15px 17px
+    transition: border-color 0.2s ease, transform 0.2s ease
+
+    &:hover
+      border-color: #cfe0c4
+      transform: translateX(2px)
+
+    .aw-name
+      font-size: 0.95rem
+      font-weight: 700
+      color: #22352a
+
+    .aw-role
+      display: inline-block
+      font-size: 0.7rem
+      color: #7d9184
+      background: #f3f7ef
+      border-radius: 6px
+      padding: 1px 8px
+      margin-left: 8px
+      vertical-align: 1px
+
+    p
+      font-size: 0.845rem
+      line-height: 1.85
+      color: #5d7365
+      margin: 8px 0 0
+
+.about-contact
+  list-style: none
+  margin: 4px 0 0
+  padding: 0
+
+  li
+    display: flex
+    align-items: center
+    gap: 12px
+    padding: 9px 0
+    border-bottom: 1px dashed #eaf1e4
+    font-size: 0.88rem
+
+    &:last-child
+      border-bottom: none
+
+    span
+      font-size: 0.74rem
+      color: #9aac9f
+      width: 3.5em
+      flex: 0 0 auto
+
+    a
+      color: acc-green
+      border-bottom: none !important
+
+      &:hover
+        text-decoration: underline

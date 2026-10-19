@@ -320,3 +320,28 @@
   }
 })();
 </script>
+
+{# ===== 滚动出现动效 ===== #}
+<script>
+(function () {
+  var items = document.querySelectorAll('.reveal');
+  if (!items.length) return;
+  if (!('IntersectionObserver' in window)) {
+    for (var i = 0; i < items.length; i++) items[i].classList.add('is-in');
+    return;
+  }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) {
+      if (!en.isIntersecting) return;
+      var el = en.target;
+      var idx = parseInt(el.dataset.ri || '0', 10);
+      setTimeout(function () { el.classList.add('is-in'); }, idx * 60);
+      io.unobserve(el);
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  for (var j = 0; j < items.length; j++) {
+    items[j].dataset.ri = String(j % 6);
+    io.observe(items[j]);
+  }
+})();
+</script>

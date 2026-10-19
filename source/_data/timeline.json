@@ -1,0 +1,102 @@
+{
+  "generated_at": "2026-10-19T13:31:53.900Z",
+  "total": 12,
+  "items": [
+    {
+      "date": "2026-10-19",
+      "time": "",
+      "title": "首页重写为「作品 + 流水」结构",
+      "project": "五次方的夏天",
+      "kind": "build",
+      "source": "milestone"
+    },
+    {
+      "date": "2026-10-16",
+      "time": "13:30",
+      "title": "挑战杯选题拟引入「普惠金融」政策框架",
+      "project": "普融智盾",
+      "kind": "build",
+      "source": "workbuddy"
+    },
+    {
+      "date": "2026-10-16",
+      "time": "",
+      "title": "138 份双视角问卷全部回收",
+      "project": "普融智盾",
+      "kind": "doc",
+      "source": "milestone"
+    },
+    {
+      "date": "2026-10-15",
+      "time": "",
+      "title": "云函数超时配置攻坚完成，确认了可行边界",
+      "project": "羽社通",
+      "kind": "ship",
+      "source": "milestone"
+    },
+    {
+      "date": "2026-10",
+      "time": "",
+      "title": "通过微信平台审核，正式上架",
+      "project": "普融智盾",
+      "kind": "ship",
+      "source": "milestone"
+    },
+    {
+      "date": "2026-09-22",
+      "time": "",
+      "title": "日程页上线",
+      "project": "五次方的夏天",
+      "kind": "build",
+      "source": "milestone"
+    },
+    {
+      "date": "2026-09-10",
+      "time": "",
+      "title": "创赛日志第一篇",
+      "project": "五次方的夏天",
+      "kind": "build",
+      "source": "git"
+    },
+    {
+      "date": "2026-09-03",
+      "time": "",
+      "title": "换装小屋上线，20 套造型全站同步",
+      "project": "五次方的夏天",
+      "kind": "ship",
+      "source": "milestone"
+    },
+    {
+      "date": "2026-08-26",
+      "time": "",
+      "title": "通过反向代理解决Vercel域名访问受限问题",
+      "project": "五次方的夏天",
+      "kind": "build",
+      "source": "git"
+    },
+    {
+      "date": "2026-08-26",
+      "time": "",
+      "title": "Waline客户端资源本地化",
+      "project": "五次方的夏天",
+      "kind": "build",
+      "source": "git"
+    },
+    {
+      "date": "2026-08-26",
+      "time": "",
+      "title": "首页改版+创赛日志+评论系统+图片支持",
+      "project": "五次方的夏天",
+      "kind": "build",
+      "source": "git"
+    },
+    {
+      "date": "2026-08-25",
+      "time": "",
+      "title": "站点上线，首篇文章发布",
+      "project": "五次方的夏天",
+      "kind": "ship",
+      "source": "milestone"
+    }
+  ]
+}

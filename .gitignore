@@ -7,3 +7,6 @@ public/
 .deploy*/
 .env
 .vercel/
+
+# 私密过滤规则，不提交
+scripts/timeline-rules.local.json
