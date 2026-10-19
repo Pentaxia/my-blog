@@ -54,34 +54,32 @@ hexo.extend.generator.register('home', function (locals) {
   /* ============ 主视觉 ============ */
   const totalWorks = (projects.projects || []).length;
   const totalLogs = (timeline.items || []).length;
+  const id = projects.identity || {};
 
   html += '<div class="home-v2">\n';
   html += '<section class="hero">\n';
   html += '  <div class="hero-copy">\n';
-  html += '    <span class="hero-tag"><i class="dot-live"></i>正在做</span>\n';
-  html += '    <h1 class="hero-title">做过的事，<br><span class="hl">都留在这里</span></h1>\n';
-  html += '    <p class="hero-sub">' + totalWorks + ' 段项目、' + totalLogs + ' 条产出记录。不是日记，是证据——做了什么、为什么这么做、最后成没成。</p>\n';
+  html += '    <span class="hero-tag"><i class="dot-live"></i>' + esc(id.school || '') + ' · ' + esc(id.major || '') + '</span>\n';
+  html += '    <h1 class="hero-title">' + (id.headline || '做过的事，<br>都留在这里') + '</h1>\n';
+  html += '    <p class="hero-sub">' + esc(id.lead || '') + '</p>\n';
+
+  const facts = id.facts || [];
+  if (facts.length) {
+    html += '    <div class="hero-facts">\n';
+    facts.forEach(function (f) {
+      html += '      <div class="hf"><b>' + esc(f.value) + '</b><span>' + esc(f.label) + '</span></div>\n';
+    });
+    html += '    </div>\n';
+  }
+
   html += '    <div class="hero-actions">\n';
   html += '      <a class="btn-solid" href="#works">看作品 <span>↓</span></a>\n';
-  html += '      <a class="btn-line" href="' + root + 'log/">全部流水</a>\n';
+  html += '      <a class="btn-line" href="#journey">做过的事</a>\n';
   html += '    </div>\n';
   html += '  </div>\n';
   html += '  <div class="hero-art">\n';
   html += '    <div class="hero-blob"></div>\n';
   html += '    <img class="hero-mascot" src="' + root + 'images/mascot-girl.png" alt="" loading="eager">\n';
-
-  // 浮动标签取第一个作品的真实指标，避免写死不同步
-  const lead = (projects.projects || [])[0] || {};
-  const leadMetrics = (lead.metrics || []).slice(0, 2);
-  if (lead.status) {
-    html += '    <span class="float-chip fc2">' + esc(lead.status) + '</span>\n';
-  }
-  if (leadMetrics[0]) {
-    html += '    <span class="float-chip fc1">' + esc(leadMetrics[0].value) + ' ' + esc(leadMetrics[0].label) + '</span>\n';
-  }
-  if (leadMetrics[1]) {
-    html += '    <span class="float-chip fc3">' + esc(leadMetrics[1].value) + ' ' + esc(leadMetrics[1].label) + '</span>\n';
-  }
   html += '  </div>\n';
   html += '</section>\n';
 
@@ -136,6 +134,13 @@ hexo.extend.generator.register('home', function (locals) {
       });
       html += '        </div>\n';
     }
+    // 「怎么验证」比「我做了什么」更有说服力
+    if (p.verify && p.verify.label) {
+      const vk = p.verify.kind || 'search';
+      html += '        <div class="work-verify vk-' + vk + '">\n';
+      html += '          <span class="vk-dot"></span>' + esc(p.verify.label) + '\n';
+      html += '        </div>\n';
+    }
     html += '      </div>\n';
     html += '    </article>\n';
   });
@@ -143,58 +148,61 @@ hexo.extend.generator.register('home', function (locals) {
   html += '  </div>\n';
   html += '</section>\n';
 
-  /* ============ 产出流水 ============ */
-  const items = (timeline.items || []).slice(0, 8);
+  /* ============ 做过的事（精选里程碑） ============ */
+  // 首页只放有分量的节点：带说明的里程碑优先，朴素的自动记录不占版面
+  const allItems = timeline.items || [];
+  const withNote = allItems.filter(function (it) { return it.note; });
+  const noNote = allItems.filter(function (it) { return !it.note; });
+  const items = withNote.concat(noNote).slice(0, 6);
 
-  html += '<section class="sec sec-log">\n';
+  html += '<section class="sec sec-log" id="journey">\n';
   html += '  <div class="sec-hd">\n';
-  html += '    <h2>产出流水<span class="sec-count">' + totalLogs + '</span></h2>\n';
-  html += '    <p>自动聚合自代码提交和工作记录，不用手写</p>\n';
+  html += '    <h2>做过的事</h2>\n';
+  html += '    <p>按时间倒序，每条都能对应到一个上线的东西</p>\n';
   html += '  </div>\n';
 
   if (items.length === 0) {
-    html += '  <p class="empty">还没有记录。跑一次 <code>node scripts/gen-timeline.js</code> 就能生成。</p>\n';
+    html += '  <p class="empty">还没有记录。</p>\n';
   } else {
-    html += '  <div class="log-line">\n';
-    let lastMonth = '';
+    html += '  <div class="mile">\n';
     items.forEach(function (it) {
-      const month = String(it.date).slice(0, 7);
-      if (month !== lastMonth) {
-        lastMonth = month;
-        html += '    <div class="log-month"><span>' + month.slice(5) + ' 月</span></div>\n';
-      }
       const acc = projectAccent[it.project] || 'slate';
-      html += '    <div class="log-item reveal">\n';
-      html += '      <div class="log-date">\n';
-      html += '        <b>' + fmtMD(it.date) + '</b>\n';
-      html += '        <span>' + (it.time ? esc(it.time) : '—') + '</span>\n';
+      html += '    <article class="mile-item reveal acc-' + acc + '">\n';
+      html += '      <div class="mile-side">\n';
+      html += '        <span class="mile-date">' + fmtMD(it.date) + '</span>\n';
+      html += '        <span class="mile-proj">' + esc(it.project) + '</span>\n';
       html += '      </div>\n';
-      html += '      <div class="log-dot acc-' + acc + '"></div>\n';
-      html += '      <div class="log-body">\n';
-      html += '        <div class="log-title">' + esc(it.title) + '</div>\n';
-      html += '        <div class="log-meta">\n';
-      html += '          <span class="log-proj acc-' + acc + '">' + esc(it.project) + '</span>\n';
-      html += '          <span class="log-kind">' + (kindIcon[it.kind] || '◈') + ' ' + (kindLabel[it.kind] || '记录') + '</span>\n';
-      html += '        </div>\n';
+      html += '      <div class="mile-main">\n';
+      html += '        <h3 class="mile-title">' + esc(it.title) + '</h3>\n';
+      if (it.note) html += '        <p class="mile-note">' + esc(it.note) + '</p>\n';
       html += '      </div>\n';
-      html += '    </div>\n';
+      html += '    </article>\n';
     });
     html += '  </div>\n';
-    html += '  <a class="sec-more" href="' + root + 'log/">看全部 ' + totalLogs + ' 条 <span>→</span></a>\n';
+    if (allItems.length > items.length) {
+      html += '  <a class="sec-more" href="' + root + 'log/">完整记录 ' + allItems.length + ' 条 <span>→</span></a>\n';
+    }
   }
   html += '</section>\n';
 
-  /* ============ 最近文章 ============ */
-  const posts = locals.posts.sort('-date').limit(4).toArray();
-  if (posts.length) {
+  /* ============ 最近写的 ============ */
+  // 首页是门面，只放和项目有关的文章（创赛日志等）。
+  // 生活随笔留在 /blog/ 里，想看的人自己点进去——不在首页占版面。
+  const allPosts = locals.posts.sort('-date').toArray();
+  const catOf = function (p) {
+    return (p.categories && p.categories.length) ? p.categories.first().name : '';
+  };
+  const workPosts = allPosts.filter(function (p) { return catOf(p) !== '生活'; }).slice(0, 4);
+
+  if (workPosts.length >= 1) {
     html += '<section class="sec">\n';
     html += '  <div class="sec-hd">\n';
-    html += '    <h2>最近写的</h2>\n';
-    html += '    <p>偶尔，也有想说的话</p>\n';
+    html += '    <h2>也写一点</h2>\n';
+    html += '    <p>项目进展和过程中的判断</p>\n';
     html += '  </div>\n';
     html += '  <div class="post-strip">\n';
-    posts.forEach(function (post) {
-      const cat = post.categories && post.categories.length ? post.categories.first().name : '';
+    workPosts.forEach(function (post) {
+      const cat = catOf(post);
       html += '    <a class="strip-card" href="' + root + post.path + '">\n';
       html += '      <span class="strip-date">' + fmtMD(post.date) + '</span>\n';
       html += '      <span class="strip-title">' + esc(post.title) + '</span>\n';
@@ -202,7 +210,7 @@ hexo.extend.generator.register('home', function (locals) {
       html += '    </a>\n';
     });
     html += '  </div>\n';
-    html += '  <a class="sec-more" href="' + root + 'blog/">全部文章 <span>→</span></a>\n';
+    html += '  <a class="sec-more" href="' + root + 'blog/">全部 ' + allPosts.length + ' 篇 <span>→</span></a>\n';
     html += '</section>\n';
   }
 
@@ -212,6 +220,8 @@ hexo.extend.generator.register('home', function (locals) {
     path: 'index.html',
     data: {
       title: this.config.title,
+      description: (projects.identity && projects.identity.lead) || this.config.description,
+      photos: [this.config.url + '/images/mascot-girl.png'],
       content: html,
       comments: false,
       type: 'home'

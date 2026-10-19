@@ -1,27 +1,21 @@
 {
-  "generated_at": "2026-10-19T13:31:53.900Z",
-  "total": 12,
+  "generated_at": "2026-10-19T13:47:22.433Z",
+  "total": 8,
   "items": [
     {
       "date": "2026-10-19",
       "time": "",
-      "title": "首页重写为「作品 + 流水」结构",
+      "title": "首页重写为「作品 + 记录」结构",
+      "note": "从「写文章的地方」改成「证明做过什么的地方」。",
       "project": "五次方的夏天",
       "kind": "build",
       "source": "milestone"
     },
     {
       "date": "2026-10-16",
-      "time": "13:30",
-      "title": "挑战杯选题拟引入「普惠金融」政策框架",
-      "project": "普融智盾",
-      "kind": "build",
-      "source": "workbuddy"
-    },
-    {
-      "date": "2026-10-16",
       "time": "",
       "title": "138 份双视角问卷全部回收",
+      "note": "老人和子女两个视角分开问。同一件事两边说法对不上的地方，最后都成了知识卡的切入点。",
       "project": "普融智盾",
       "kind": "doc",
       "source": "milestone"
@@ -29,7 +23,8 @@
     {
       "date": "2026-10-15",
       "time": "",
-      "title": "云函数超时配置攻坚完成，确认了可行边界",
+      "title": "云函数超时配置攻坚完成",
+      "note": "官方工具链里根本没有这个参数，试了两轮才确认边界，最后绕道云服务商接口解决。",
       "project": "羽社通",
       "kind": "ship",
       "source": "milestone"
@@ -38,16 +33,9 @@
       "date": "2026-10",
       "time": "",
       "title": "通过微信平台审核，正式上架",
+      "note": "从选题到过审，五个月。这是第一个真正意义上「陌生人可以打开用」的产品。",
       "project": "普融智盾",
       "kind": "ship",
-      "source": "milestone"
-    },
-    {
-      "date": "2026-09-22",
-      "time": "",
-      "title": "日程页上线",
-      "project": "五次方的夏天",
-      "kind": "build",
       "source": "milestone"
     },
     {
@@ -62,6 +50,7 @@
       "date": "2026-09-03",
       "time": "",
       "title": "换装小屋上线，20 套造型全站同步",
+      "note": "纯玩的东西，但把 localStorage 跨页同步和图片加载优化都跑通了。",
       "project": "五次方的夏天",
       "kind": "ship",
       "source": "milestone"
@@ -69,31 +58,17 @@
     {
       "date": "2026-08-26",
       "time": "",
-      "title": "通过反向代理解决Vercel域名访问受限问题",
+      "title": "评论系统在受限网络下可用",
+      "note": "换了三套方案才解决：CDN 被挡、域名被挡、资源本地化。",
       "project": "五次方的夏天",
-      "kind": "build",
-      "source": "git"
-    },
-    {
-      "date": "2026-08-26",
-      "time": "",
-      "title": "Waline客户端资源本地化",
-      "project": "五次方的夏天",
-      "kind": "build",
-      "source": "git"
-    },
-    {
-      "date": "2026-08-26",
-      "time": "",
-      "title": "首页改版+创赛日志+评论系统+图片支持",
-      "project": "五次方的夏天",
-      "kind": "build",
-      "source": "git"
+      "kind": "ship",
+      "source": "milestone"
     },
     {
       "date": "2026-08-25",
       "time": "",
-      "title": "站点上线，首篇文章发布",
+      "title": "站点上线，第一篇文章发布",
+      "note": "从「想要一个自己的地方」到域名能打开，用了两周。",
       "project": "五次方的夏天",
       "kind": "ship",
       "source": "milestone"

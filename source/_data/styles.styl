@@ -707,7 +707,7 @@ acc-slate = #6a7a70
 // ---------- 最近文章 ----------
 .post-strip
   display: grid
-  grid-template-columns: 1fr 1fr
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr))
   gap: 10px
 
 .strip-card
@@ -736,9 +736,11 @@ acc-slate = #6a7a70
 .strip-title
   font-size: 0.855rem
   color: #3f5449
+  line-height: 1.5
   overflow: hidden
-  text-overflow: ellipsis
-  white-space: nowrap
+  display: -webkit-box
+  -webkit-line-clamp: 2
+  -webkit-box-orient: vertical
 
 .strip-cat
   margin-left: auto
@@ -1873,3 +1875,213 @@ body.intro-lock
 
       &:hover
         text-decoration: underline
+
+// ========== 人设事实条 ==========
+.hero-facts
+  display: flex
+  gap: 30px
+  margin: 4px 0 24px
+  padding: 16px 0 0
+  border-top: 1px solid #e7efe1
+
+  .hf
+    display: flex
+    flex-direction: column
+    gap: 2px
+
+    b
+      font-size: 1.5rem
+      font-weight: 700
+      color: #22352a
+      line-height: 1.1
+      font-variant-numeric: tabular-nums
+
+    span
+      font-size: 0.7rem
+      color: #8ba18f
+      letter-spacing: 0.03em
+
+// ========== 做过的事（里程碑） ==========
+.mile
+  border-top: 1px solid #e7efe1
+
+.mile-item
+  --acc: acc-green
+  display: grid
+  grid-template-columns: 116px 1fr
+  gap: 0
+  padding: 22px 0
+  border-bottom: 1px solid #eef4e9
+  transition: background 0.22s ease
+
+  &:hover
+    background: #fbfdf9
+
+  &.acc-green
+    --acc: acc-green
+
+  &.acc-amber
+    --acc: acc-amber
+
+  &.acc-blue
+    --acc: acc-blue
+
+.mile-side
+  display: flex
+  flex-direction: column
+  gap: 4px
+  padding-top: 2px
+
+.mile-date
+  font-size: 0.86rem
+  font-weight: 600
+  color: #4a6455
+  font-variant-numeric: tabular-nums
+  letter-spacing: 0.01em
+
+.mile-proj
+  font-size: 0.68rem
+  color: var(--acc)
+  opacity: 0.85
+
+.mile-main
+  min-width: 0
+  border-left: 2px solid var(--acc)
+  padding-left: 18px
+
+.mile-title
+  font-size: 1rem
+  font-weight: 600
+  color: #22352a
+  margin: 0 0 5px
+  line-height: 1.5
+  letter-spacing: -0.005em
+
+.mile-note
+  font-size: 0.845rem
+  line-height: 1.8
+  color: #64796c
+  margin: 0
+  max-width: 38em
+
+@media (max-width: 900px)
+  .hero-facts
+    gap: 22px
+
+    .hf b
+      font-size: 1.2rem
+
+  .mile-item
+    grid-template-columns: 1fr
+    gap: 8px
+    padding: 18px 0
+
+  .mile-side
+    flex-direction: row
+    align-items: baseline
+    gap: 9px
+
+  .mile-main
+    padding-left: 14px
+
+  .mile-title
+    font-size: 0.94rem
+
+  .mile-note
+    font-size: 0.81rem
+
+// 完整记录页：里程碑说明
+.log-note-line
+  font-size: 0.815rem
+  line-height: 1.8
+  color: #6d8377
+  margin: 6px 0 0
+  padding-left: 0
+  max-width: 40em
+
+// 完整记录页：里程碑说明
+.log-note-line
+  font-size: 0.815rem
+  line-height: 1.8
+  color: #6d8377
+  margin: 6px 0 0
+  padding-left: 0
+  max-width: 40em
+
+// ========== 作品卡：验证入口 ==========
+.work-verify
+  display: flex
+  align-items: center
+  gap: 7px
+  margin-top: 12px
+  padding: 8px 12px
+  border-radius: 8px
+  font-size: 0.755rem
+  line-height: 1.5
+
+  .vk-dot
+    width: 6px
+    height: 6px
+    border-radius: 50%
+    flex: 0 0 6px
+
+  &.vk-search
+    background: #edf6e7
+    color: #3f6e4c
+
+    .vk-dot
+      background: #5f9a4e
+      box-shadow: 0 0 0 3px rgba(95,154,78,0.16)
+
+  &.vk-internal
+    background: #f5f7f4
+    color: #7d9184
+
+    .vk-dot
+      background: #a9b8ac
+
+  &.vk-self
+    background: #f2f6fd
+    color: #4a6a92
+
+    .vk-dot
+      background: #7a9cc4
+
+// ========== 作品卡：验证入口 ==========
+.work-verify
+  display: flex
+  align-items: center
+  gap: 7px
+  margin-top: 12px
+  padding: 8px 12px
+  border-radius: 8px
+  font-size: 0.755rem
+  line-height: 1.5
+
+  .vk-dot
+    width: 6px
+    height: 6px
+    border-radius: 50%
+    flex: 0 0 6px
+
+  &.vk-search
+    background: #edf6e7
+    color: #3f6e4c
+
+    .vk-dot
+      background: #5f9a4e
+      box-shadow: 0 0 0 3px rgba(95,154,78,0.16)
+
+  &.vk-internal
+    background: #f5f7f4
+    color: #7d9184
+
+    .vk-dot
+      background: #a9b8ac
+
+  &.vk-self
+    background: #f2f6fd
+    color: #4a6a92
+
+    .vk-dot
+      background: #7a9cc4

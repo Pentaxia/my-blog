@@ -130,6 +130,8 @@ function dayDiff(a, b) {
 
 function isSameEvent(a, b, minShared) {
   if (a.project !== b.project) return false;
+  // 同一天同项目，基本就是在说同一件事，交给里程碑代表
+  if (String(a.date) === String(b.date)) return true;
   if (dayDiff(a.date, b.date) > 2) return false;
   const A = keywords(a.title), B = keywords(b.title);
   let shared = 0;
@@ -321,6 +323,7 @@ function collectMilestones() {
           date: m.date,
           time: '',
           title: m.title,
+          note: m.note || '',
           project: proj.name,
           kind: m.kind || 'ship',
           source: 'milestone'

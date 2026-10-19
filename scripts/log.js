@@ -50,9 +50,9 @@ hexo.extend.generator.register('log-page', function (locals) {
   html += '<div class="home-v2 log-page">\n';
 
   html += '<header class="log-hero">\n';
-  html += '  <span class="hero-tag"><i class="dot-live"></i>自动记录</span>\n';
-  html += '  <h1 class="log-h1">产出流水</h1>\n';
-  html += '  <p class="log-lead">这些不是回忆，是记录。每一条都来自真实的代码提交或当天的项目记录，跨 ' + spanDays() + ' 天，共 ' + items.length + ' 条。</p>\n';
+  html += '  <span class="hero-tag"><i class="dot-live"></i>完整记录</span>\n';
+  html += '  <h1 class="log-h1">做过的事</h1>\n';
+  html += '  <p class="log-lead">按时间倒序。每一条都对应一个真实的动作——上线、交付、或者在某件事上把边界摸清楚了。</p>\n';
   html += '  <div class="log-stats">\n';
   projList.forEach(function (p) {
     const acc = projectAccent[p] || 'slate';
@@ -89,11 +89,16 @@ hexo.extend.generator.register('log-page', function (locals) {
       html += '        <span class="log-proj acc-' + acc + '">' + esc(it.project) + '</span>\n';
       html += '        <span class="log-kind">' + (kindIcon[it.kind] || '◈') + ' ' + (kindLabel[it.kind] || '记录') + '</span>\n';
       html += '      </div>\n';
+      if (it.note) {
+        html += '      <p class="log-note-line">' + esc(it.note) + '</p>\n';
+      }
       html += '    </div>\n';
       html += '  </div>\n';
     });
     html += '</div>\n';
   }
+
+  html += '<p class="log-note">记录由本地脚本自动整理，不是事后回忆。能被写出来的，都是真做过的。</p>\n';
 
   const script = '<script>(function(){' +
     'var f=document.getElementById("log-filter");' +

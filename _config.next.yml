@@ -103,7 +103,7 @@ open_graph:
 menu:
   首页: / || fa fa-home
   作品: /#works || fa fa-layer-group
-  流水: /log/ || fa fa-stream
+  记录: /log/ || fa fa-stream
   文章: /blog/ || fa fa-pen-fancy
   换装: /dressup/ || fa fa-magic
   关于: /about/ || fa fa-user
