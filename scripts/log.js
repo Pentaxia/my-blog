@@ -33,7 +33,7 @@ hexo.extend.generator.register('log-page', function (locals) {
   const kindIcon = { ship: '↗', build: '◈', doc: '✎', study: '◎' };
   const kindLabel = { ship: '交付', build: '构建', doc: '写作', study: '研究' };
   const projectAccent = {
-    '普融智盾': 'green', '羽社通': 'amber', '五次方的夏天': 'blue'
+    '普融智盾': 'green', '羽约小站': 'amber', '五次方的夏天': 'blue'
   };
 
   // 按项目统计

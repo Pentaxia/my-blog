@@ -162,7 +162,7 @@ function dedupeSimilar(items) {
 // 不写进本文件——否则公开代码里就能看出哪些事被特意排除了。
 const PROJECT_RULES = (RULES.projectRules && RULES.projectRules.length) ? RULES.projectRules : [
   { name: '普融智盾', keys: ['普融智盾', '欣悦杯', '挑战杯', '反诈', '问卷', '参赛方案', 'BP'] },
-  { name: '羽社通', keys: ['羽社通', 'FeatherClub', 'badminton', '云函数', '羽毛球', '羽约'] },
+  { name: '羽约小站', keys: ['羽约小站', '羽社通', 'FeatherClub', 'badminton', '云函数', '羽毛球', '羽约'] },
   { name: '五次方的夏天', keys: ['博客', 'pentaxia', 'my-blog', 'Hexo', 'Waline', '换装'] }
 ];
 

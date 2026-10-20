@@ -100,13 +100,13 @@
       "link": "",
       "linkLabel": "",
       "verify": {
-        "label": "已通过微信平台审核，正式上线",
+        "label": "微信搜索「普融智盾」即可使用",
         "kind": "live"
       }
     },
     {
       "slug": "yushetong",
-      "name": "羽社通",
+      "name": "羽约小站",
       "subtitle": "羽毛球社团管理小程序",
       "role": "独立设计与开发",
       "period": "2025.12 — 2026.10",
@@ -162,7 +162,7 @@
       "link": "",
       "linkLabel": "",
       "verify": {
-        "label": "已通过微信平台审核，正式上线",
+        "label": "微信搜索「羽约小站」即可使用",
         "kind": "live"
       }
     },

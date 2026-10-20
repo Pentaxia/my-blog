@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-10-20T11:03:35.576Z",
-  "total": 10,
+  "generated_at": "2026-10-20T11:06:24.393Z",
+  "total": 11,
   "items": [
     {
       "date": "2026-10-20",
@@ -10,6 +10,14 @@
       "project": "普融智盾",
       "kind": "ship",
       "source": "milestone"
+    },
+    {
+      "date": "2026-10-20",
+      "time": "",
+      "title": "修正上线状态：两个小程序均已通过微信平台审核上线",
+      "project": "五次方的夏天",
+      "kind": "build",
+      "source": "git"
     },
     {
       "date": "2026-10-19",
@@ -34,7 +42,7 @@
       "time": "",
       "title": "云函数超时配置攻坚完成",
       "note": "官方工具链里根本没有这个参数，试了两轮才确认边界，最后绕道云服务商接口解决。",
-      "project": "羽社通",
+      "project": "羽约小站",
       "kind": "ship",
       "source": "milestone"
     },
@@ -52,7 +60,7 @@
       "time": "",
       "title": "通过微信平台审核，正式上线",
       "note": "从 v1.0.8 到 v2.0.3，做到个人主体能上架的完整形态。社团同学现在在微信里就能用，不用装任何东西。",
-      "project": "羽社通",
+      "project": "羽约小站",
       "kind": "ship",
       "source": "milestone"
     },

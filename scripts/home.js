@@ -45,7 +45,7 @@ hexo.extend.generator.register('home', function (locals) {
   const kindLabel = { ship: '交付', build: '构建', doc: '写作', study: '研究' };
   const projectAccent = {
     '普融智盾': 'green',
-    '羽社通': 'amber',
+    '羽约小站': 'amber',
     '五次方的夏天': 'blue'
   };
 
