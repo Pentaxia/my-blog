@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-10-20T11:21:23.350Z",
-  "total": 10,
+  "generated_at": "2026-10-20T11:21:33.938Z",
+  "total": 11,
   "items": [
     {
       "date": "2026-10-20",
@@ -10,6 +10,14 @@
       "project": "普融智盾",
       "kind": "ship",
       "source": "milestone"
+    },
+    {
+      "date": "2026-10-20",
+      "time": "",
+      "title": "新增自动发布机制：一条命令完成采集到上线",
+      "project": "五次方的夏天",
+      "kind": "build",
+      "source": "git"
     },
     {
       "date": "2026-10-19",

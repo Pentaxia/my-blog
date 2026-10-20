@@ -276,6 +276,8 @@ function collectGit() {
       const [date, subject] = line.split('|');
       if (!subject) continue;
       if (/^(Merge|Revert|Update dependabot)/i.test(subject)) continue;
+      // 自动发布产生的提交不算成果，跳过，否则会自我循环
+      if (/\[auto\]/.test(subject)) continue;
 
       // 中文提交直接用，英文做轻量映射
       let title = cleanTitle(subject.trim());
@@ -296,6 +298,13 @@ function collectGit() {
         if (!hit) continue;
         title = hit[1];
       }
+
+      // 成果门槛：git 提交是写给开发者看的，不是给访客看的。
+      // 只有命中「上线 / 发布 / 交付 / 过审」这类结果词才算成果，
+      // 其余技术改动（修复、重构、优化、调整）一律不进公开时间线。
+      const RESULT_WORDS = ['上线', '发布', '交付', '上架', '通过审核', '过审', '第一篇', '首次', '完成'];
+      if (!RESULT_WORDS.some(w => title.includes(w))) continue;
+
       out.push({
         date,
         time: '',
@@ -303,7 +312,8 @@ function collectGit() {
         project: '五次方的夏天',
         kind: 'build',
         source: 'git'
-      });    }
+      });
+    }
   } catch (e) {
     // git 不可用时静默跳过
   }
