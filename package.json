@@ -3,12 +3,12 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "timeline": "node scripts/gen-timeline.js",
+    "timeline": "node tools/gen-timeline.js",
     "build": "hexo generate",
     "clean": "hexo clean",
     "deploy": "hexo deploy",
     "server": "hexo server",
-    "publish": "node scripts/publish.js"
+    "publish": "node tools/publish.js"
   },
   "hexo": {
     "version": "7.3.0"

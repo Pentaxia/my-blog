@@ -4,9 +4,9 @@
  * 自动发布：采集 → 生成 → 提交 → 推送
  *
  * 用法：
- *   node scripts/publish.js            正常执行
- *   node scripts/publish.js --dry      只看会做什么，不写入
- *   node scripts/publish.js --force    即使没有新内容也推送（一般不用）
+ *   node tools/publish.js            正常执行
+ *   node tools/publish.js --dry      只看会做什么，不写入
+ *   node tools/publish.js --force    即使没有新内容也推送（一般不用）
  *
  * 设计要点：
  * 1. 没新内容就不提交，避免无效构建

@@ -6,9 +6,9 @@
  *
  * ⚠️ 重要：本仓库是公开的，timeline.json 会随 git 提交，
  *    所以敏感内容必须在生成阶段就剔除，不能靠前端隐藏。
- *    过滤规则见 scripts/timeline-rules.json
+ *    过滤规则见 tools/timeline-rules.json
  *
- * 用法：node scripts/gen-timeline.js
+ * 用法：node tools/gen-timeline.js
  */
 
 const fs = require('fs');
@@ -302,7 +302,11 @@ function collectGit() {
       // 成果门槛：git 提交是写给开发者看的，不是给访客看的。
       // 只有命中「上线 / 发布 / 交付 / 过审」这类结果词才算成果，
       // 其余技术改动（修复、重构、优化、调整）一律不进公开时间线。
-      const RESULT_WORDS = ['上线', '发布', '交付', '上架', '通过审核', '过审', '第一篇', '首次', '完成'];
+      // 另外，技术性词汇即使带了「上线」也算实现细节，同样排除。
+      const RESULT_WORDS = ['上线', '发布', '交付', '上架', '通过审核', '过审', '第一篇', '首次'];
+      const TECH_WORDS = ['机制', '脚本', '工具', '重构', '配置', '管线', '流程', '结构',
+        '逻辑', '代码', '函数', '接口', '依赖', '目录', '新增', '接入', '迁移', '部署', '优化', '修复'];
+      if (TECH_WORDS.some(w => title.includes(w))) continue;
       if (!RESULT_WORDS.some(w => title.includes(w))) continue;
 
       out.push({
