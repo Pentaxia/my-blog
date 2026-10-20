@@ -1,7 +1,15 @@
 {
-  "generated_at": "2026-10-20T11:26:52.848Z",
+  "generated_at": "2026-10-20T11:37:42.200Z",
   "total": 11,
   "items": [
+    {
+      "date": "2026-10-20",
+      "time": "19:36",
+      "title": "博客自动运营：新进展 + 两处真实缺陷（同日 19:36）",
+      "project": "五次方的夏天",
+      "kind": "build",
+      "source": "workbuddy"
+    },
     {
       "date": "2026-10-20",
       "time": "",
@@ -10,14 +18,6 @@
       "project": "普融智盾",
       "kind": "ship",
       "source": "milestone"
-    },
-    {
-      "date": "2026-10-20",
-      "time": "",
-      "title": "自动运营：一条命令完成采集到上线",
-      "project": "五次方的夏天",
-      "kind": "build",
-      "source": "git"
     },
     {
       "date": "2026-10-19",
