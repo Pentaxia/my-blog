@@ -399,6 +399,14 @@ function applyPrivacy(items) {
 }
 
 function main() {
+  // 只在本地生成。构建机（Vercel 等）没有本地工作日志，
+  // 重新生成会得到一份不完整的数据，所以直接沿用已提交的 timeline.json。
+  const localSourceDir = path.join(HOME, 'WorkBuddy');
+  if (!fs.existsSync(localSourceDir)) {
+    console.log('未检测到本地工作日志目录，跳过生成（沿用已提交的 timeline.json）');
+    return;
+  }
+
   const collected = dedupe([].concat(collectWorkBuddy(), collectGit()));
 
   // 安全阀：采集不到本地素材时（例如在 Vercel 构建机），
