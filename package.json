@@ -8,7 +8,8 @@
     "clean": "hexo clean",
     "deploy": "hexo deploy",
     "server": "hexo server",
-    "publish": "node tools/publish.js"
+    "publish": "node tools/publish.js",
+    "push:all": "node tools/push-all.js"
   },
   "hexo": {
     "version": "7.3.0"

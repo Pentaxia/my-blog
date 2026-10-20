@@ -114,45 +114,66 @@ async function push(token) {
   const remoteCommit = await api(token, 'GET', `/repos/${OWNER}/${REPO}/git/commits/${remoteSha}`);
   const remoteTree = remoteCommit.tree.sha;
 
-  // 找本地哪个提交的内容与远端一致（应对 API 提交导致的 SHA 不同）
-  const history = sh('git rev-list -50 HEAD').split(/\r?\n/).filter(Boolean);
-  let base = null;
-  for (const c of history) {
-    if (shSafe(`git show -s --format=%T ${c}`) === remoteTree) { base = c; break; }
-  }
-  if (!base) {
-    fail('本地与远端内容对不上，需要先 git fetch 对齐（见 README 排查步骤）');
+  // 不依赖提交历史对齐（API 提交会让本地缺失对应 SHA）。
+  // 直接做文件级比对：远端 tree 的每个 blob sha vs 本地 tree 的 blob sha。
+  const remoteAll = await api(token, 'GET',
+    `/repos/${OWNER}/${REPO}/git/trees/${remoteTree}?recursive=1`);
+  const remoteMap = new Map();
+  (remoteAll.tree || []).forEach(t => { if (t.type === 'blob') remoteMap.set(t.path, t.sha); });
+
+  const localMap = new Map();
+  // core.quotepath=false：否则中文路径会被转义成 \345\202...，导致误判文件不存在
+  sh('git -c core.quotepath=false ls-tree -r HEAD').split(/\r?\n/).filter(Boolean).forEach(line => {
+    const m = line.match(/^(\d+)\s+blob\s+([0-9a-f]+)\t(.+)$/);
+    if (m) localMap.set(m[3], { mode: m[1], sha: m[2] });
+  });
+
+  // 需要上传/更新的文件
+  const changed = [];
+  for (const [p, v] of localMap) {
+    if (remoteMap.get(p) !== v.sha) changed.push({ path: p, mode: v.mode, sha: v.sha });
   }
 
-  const head = sh('git rev-parse HEAD');
-  if (base === head && !FORCE) {
-    log('      本地与远端一致，无需推送');
+  // 自动发布不做任何删除。
+  // 教训：曾因中文路径被 git 转义成 \345\202... 导致误判「文件已不存在」，
+  // 一次性删掉了线上 7 篇文章。删除是人的决定，不该由脚本代劳。
+  if (changed.length === 0 && !FORCE) {
+    log('      远端内容已是最新，无需推送');
     return;
   }
 
-  const diff = sh(`git diff --name-status ${base} ${head}`);
-  const files = diff.split(/\r?\n/).filter(Boolean).map(l => {
-    const p = l.split('\t');
-    return { status: p[0][0], path: p[p.length - 1] };
-  });
+  // 安全阀：自动发布只应该动数据文件。一旦发现要改文章或大量文件，
+  // 说明状态异常，立即中止而不是硬推上去。
+  const ALLOWED = /^source\/_data\/(timeline|projects)\.json$/;
+  const unexpected = changed.filter(f => !ALLOWED.test(f.path));
+  if (unexpected.length > 0) {
+    log('\n      ⚠ 检测到非数据文件的变化，已中止：');
+    unexpected.slice(0, 10).forEach(f => log('        ' + f.path));
+    if (unexpected.length > 10) log('        ... 还有 ' + (unexpected.length - 10) + ' 个');
+    log('      自动发布只同步 timeline.json 和 projects.json。');
+    log('      其他改动请用 git push 手动发布。');
+    process.exit(2);
+  }
 
   const entries = [];
-  for (const f of files) {
-    let sha = null;
-    let mode = '100644';
-    if (f.status !== 'D') {
-      const buf = spawnSync('git', ['show', 'HEAD:' + f.path], {
-        cwd: ROOT, maxBuffer: 128 * 1024 * 1024
-      }).stdout;
-      const blob = await api(token, 'POST', `/repos/${OWNER}/${REPO}/git/blobs`, {
-        content: buf.toString('base64'), encoding: 'base64'
-      });
-      sha = blob.sha;
-      const tl = shSafe(`git ls-tree HEAD "${f.path}"`);
-      if (tl) mode = tl.split(/\s+/)[0];
+  for (const f of changed) {
+    const buf = spawnSync('git', ['show', 'HEAD:' + f.path], {
+      cwd: ROOT, maxBuffer: 128 * 1024 * 1024
+    }).stdout;
+    if (!buf || buf.length === 0) {
+      const chk = spawnSync('git', ['cat-file', '-e', 'HEAD:' + f.path], { cwd: ROOT });
+      if (chk.status !== 0) { log('      ! 跳过（读不到）' + f.path); continue; }
     }
-    entries.push({ path: f.path, mode, type: 'blob', sha });
-    log('      ' + f.status + ' ' + f.path);
+    const blob = await api(token, 'POST', `/repos/${OWNER}/${REPO}/git/blobs`, {
+      content: buf.toString('base64'), encoding: 'base64'
+    });
+    entries.push({ path: f.path, mode: f.mode, type: 'blob', sha: blob.sha });
+    log('      M ' + f.path);
+  }
+
+  if (entries.length === 0) {
+    log('      没有需要同步的内容');
+    return;
   }
 
   const tree = await api(token, 'POST', `/repos/${OWNER}/${REPO}/git/trees`, {
@@ -186,25 +207,27 @@ async function push(token) {
   generate();
 
   log('\n[2/4] 检查是否有新内容');
-  if (!hasChanges() && !FORCE) {
-    log('      没有新记录，跳过');
-    log('\n完成（无需发布）');
-    return;
+  const dirty = hasChanges();
+  if (dirty) {
+    log('      发现新记录');
+  } else {
+    log('      本地记录无变化');
   }
-  log('      发现新内容');
 
   if (DRY) {
-    log('\n[dry] 以下内容将被提交并推送：');
-    log(shSafe('git diff --stat source/_data/'));
+    log('\n[dry] 工作区变化：');
+    log(dirty ? shSafe('git diff --stat source/_data/') : '  （无）');
     log('\n[dry] 结束');
     return;
   }
 
-  commit();
+  if (dirty) commit();
 
+  // 即使本地没变化，也要检查远端是否落后（可能上次推送中断）
   const token = getToken();
   if (!token) fail('未找到 GitHub 凭据，无法推送');
 
+  log('\n[3/4] 检查远端状态');
   await push(token);
   log('\n✓ 全部完成，Vercel 会自动构建上线');
 })().catch(e => {

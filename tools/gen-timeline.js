@@ -221,6 +221,21 @@ function extractTime(raw) {
   return m ? (m[1].padStart(2, '0') + ':' + m[2]) : '';
 }
 
+/* ---------- 成果门槛 ---------- */
+// 工作日志和 git 提交都是写给自己/开发者看的，不是给访客看的。
+// 只有明确表达「交付了一个结果」的条目才配进公开时间线。
+// 其余（排查过程、缺陷、优化、重构）属于内部过程，对外没有信息价值。
+const RESULT_WORDS = ['上线', '发布', '交付', '上架', '通过审核', '过审', '第一篇', '首次', '提交完成', '回收完成', '全部回收'];
+const TECH_WORDS = ['机制', '脚本', '工具', '重构', '配置', '管线', '流程', '结构', '逻辑',
+  '代码', '函数', '接口', '依赖', '目录', '新增', '接入', '迁移', '部署', '优化', '修复',
+  '缺陷', '排查', '调试', '进展', '问题', '异常', 'bug', 'Bug',
+  '命令', '采集', '自动运营', '一条', '改写', '统一', '整理', '迁移'];
+
+function isOutcome(title) {
+  if (TECH_WORDS.some(w => title.includes(w))) return false;
+  return RESULT_WORDS.some(w => title.includes(w));
+}
+
 /* ---------- 来源 1：WorkBuddy 工作日志 ---------- */
 function collectWorkBuddy() {
   const base = path.join(HOME, 'WorkBuddy');
@@ -245,6 +260,8 @@ function collectWorkBuddy() {
         const title = cleanTitle(body);
         if (title.length < 4) continue;
         if (NOISE.test(title)) continue;
+        // 只保留真正的成果，工作过程不进公开记录
+        if (!isOutcome(title)) continue;
 
         const project = detectProject(body);
         if (project === '其他') continue;
@@ -300,14 +317,8 @@ function collectGit() {
       }
 
       // 成果门槛：git 提交是写给开发者看的，不是给访客看的。
-      // 只有命中「上线 / 发布 / 交付 / 过审」这类结果词才算成果，
-      // 其余技术改动（修复、重构、优化、调整）一律不进公开时间线。
-      // 另外，技术性词汇即使带了「上线」也算实现细节，同样排除。
-      const RESULT_WORDS = ['上线', '发布', '交付', '上架', '通过审核', '过审', '第一篇', '首次'];
-      const TECH_WORDS = ['机制', '脚本', '工具', '重构', '配置', '管线', '流程', '结构',
-        '逻辑', '代码', '函数', '接口', '依赖', '目录', '新增', '接入', '迁移', '部署', '优化', '修复'];
-      if (TECH_WORDS.some(w => title.includes(w))) continue;
-      if (!RESULT_WORDS.some(w => title.includes(w))) continue;
+      // 只有明确表达结果的提交才算成果，技术改动一律不进公开时间线。
+      if (!isOutcome(title)) continue;
 
       out.push({
         date,
