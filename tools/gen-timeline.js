@@ -475,6 +475,22 @@ function main() {
   // 只留最近 120 条，避免无限膨胀
   items = items.slice(0, 120);
 
+  // 内容没变就不写文件。
+  // 否则 generated_at 每次都不一样，会让「有没有新内容」的判断永远为真，
+  // 导致每次运行都产生一次无意义的提交和构建。
+  const body = JSON.stringify({ total: items.length, items }, null, 2);
+  const prev = (function () {
+    try {
+      const old = JSON.parse(fs.readFileSync(OUT, 'utf8'));
+      return JSON.stringify({ total: old.total, items: old.items }, null, 2);
+    } catch (e) { return null; }
+  })();
+
+  if (prev === body) {
+    console.log('内容无变化（' + items.length + ' 条），不重写文件');
+    return;
+  }
+
   const payload = {
     generated_at: new Date().toISOString(),
     total: items.length,
