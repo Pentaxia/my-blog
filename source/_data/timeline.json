@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-10-20T11:41:51.264Z",
-  "total": 11,
+  "generated_at": "2026-10-20T11:43:48.814Z",
+  "total": 10,
   "items": [
     {
       "date": "2026-10-20",
@@ -10,14 +10,6 @@
       "project": "普融智盾",
       "kind": "ship",
       "source": "milestone"
-    },
-    {
-      "date": "2026-10-20",
-      "time": "",
-      "title": "自动发布加固：禁止删除 + 成果门槛",
-      "project": "五次方的夏天",
-      "kind": "build",
-      "source": "git"
     },
     {
       "date": "2026-10-19",
